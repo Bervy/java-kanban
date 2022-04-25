@@ -18,7 +18,7 @@ public class Epic extends Task {
         return subTasks;
     }
 
-    public void setState(String state) {
+    public void setState(States state) {
         super.state = state;
     }
 }
