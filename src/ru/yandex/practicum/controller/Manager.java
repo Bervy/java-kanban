@@ -166,14 +166,14 @@ public class Manager {
         return subTasks.getOrDefault(subTaskId, null);
     }
 
-    public boolean addSubTask (Epic epic, SubTask newSubtask) {
+    public boolean addSubTask (SubTask newSubtask) {
         if(subTasks.containsValue(newSubtask)) {
             return false;
         } else {
             subTasks.put(subTaskId, newSubtask);
             newSubtask.setId(subTaskId);
             subTaskId++;
-            epic.getSubTasks().add(newSubtask);
+            newSubtask.getEpic().getSubTasks().add(newSubtask);
             return true;
         }
     }
