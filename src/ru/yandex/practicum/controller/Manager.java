@@ -127,18 +127,18 @@ public class Manager {
         int count = 0;
 
         for (SubTask s : subTasksOfFoundedEpic) {
-            if(s.getState().equals("IN_PROGRESS")) {
+            if(s.getState().equals(Task.States.IN_PROGRESS)) {
                 count++;
-            } else if (s.getState().equals("DONE")) {
+            } else if (s.getState().equals(Task.States.DONE)) {
                 count +=2;
             }
         }
         if (count == 0) {
-            epic.setState("NEW");
+            epic.setState(Task.States.NEW);
         } else if (count == subTasksOfFoundedEpic.size() * 2) {
-            epic.setState("DONE");
+            epic.setState(Task.States.DONE);
         } else {
-            epic.setState("IN_PROGRESS");
+            epic.setState(Task.States.IN_PROGRESS);
         }
     }
 

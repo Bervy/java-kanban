@@ -8,13 +8,27 @@ public class Task {
     private final String name;
     private final String description;
     private int id;
-    protected String state;
+    protected States state;
+
+    public enum States {
+        NEW,
+        IN_PROGRESS,
+        DONE
+    }
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.id = 0;
-        this.state = "NEW";
+        this.state = States.NEW;
+    }
+
+    public void changeState () {
+        if (state.equals(States.NEW)) {
+            state = States.IN_PROGRESS;
+        } else if (state.equals(States.IN_PROGRESS)) {
+            state = States.DONE;
+        }
     }
 
     public int getId() {
@@ -25,8 +39,12 @@ public class Task {
         this.id = id;
     }
 
-    public String getState() {
+    public States getState() {
         return state;
+    }
+
+    public void setState(States state) {
+        this.state = state;
     }
 
     @Override
