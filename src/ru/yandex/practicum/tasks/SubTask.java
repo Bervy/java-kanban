@@ -5,7 +5,7 @@ package ru.yandex.practicum.tasks;
  */
 public class SubTask extends Task {
 
-    Epic epic;
+    private final Epic epic;
 
     public SubTask(Epic epic, String name, String description) {
         super(name, description);
