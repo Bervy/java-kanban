@@ -1,13 +1,14 @@
 package ru.yandex.practicum.tasks;
+
 /**
  * @author Vlad Osipov
  * @create 2022-04-23   10:01
  */
 public class Task {
 
-    private final String name;
-    private final String description;
-    private int id;
+    protected final String name;
+    protected final String description;
+    protected int id;
     protected States state;
 
     public enum States {
@@ -22,7 +23,7 @@ public class Task {
         this.id = 0;
         this.state = States.NEW;
     }
-
+    //Временный метод для проверки состояний задачи
     public void changeState () {
         if (state.equals(States.NEW)) {
             state = States.IN_PROGRESS;
@@ -55,5 +56,13 @@ public class Task {
                 ", id=" + id +
                 ", state='" + state + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+        Task task = (Task) o;
+        return id == task.id;
     }
 }
