@@ -56,25 +56,19 @@ public class Main {
         System.out.println("===================================");
         System.out.println("3. Получение задачи по идентификатору.\n ");
         System.out.println("Получение задачи по id=1.\n");
-
         System.out.println(manager.getTaskById(1));
-
         System.out.println("Получение задачи по id=0.\n");
-
         System.out.println(manager.getTaskById(0));
-
-
         System.out.println("===================================");
         System.out.println("4. Создание новой задачи.\n ");
-
         System.out.println("Список до создания новой задачи");
+
         for(Task task : manager.getListOfTasks()) {
             System.out.println(task);
         }
 
-        Task task3 = new Task("epic3", "epic3");
+        Task task3 = new Task("Task3", "Task3");
         System.out.println("Создалась новая задача " + manager.addTask(task3));
-
         System.out.println("Список после создания задачи");
 
         for(Task task : manager.getListOfTasks()) {
@@ -84,43 +78,35 @@ public class Main {
         System.out.println("===================================");
         System.out.println("5. Обновление задачи.\n ");
         System.out.println("Список до изменения состояния 1 задачи");
+
         for(Task task : manager.getListOfTasks()) {
             System.out.println(task);
         }
         task1.changeState();
         System.out.println("1 задача изменила состояние на IN_PROGRESS" + manager.updateTask(task1));
-
         System.out.println("Список после изменения состояния 1 задачи");
+
         for(Task task : manager.getListOfTasks()) {
             System.out.println(task);
         }
 
         System.out.println("===================================");
         System.out.println("6. Удаление задачи по идентификатору.\n ");
-
         System.out.println("Список до удаления 2 задачи");
+
         for(Task task : manager.getListOfTasks()) {
             System.out.println(task);
         }
         System.out.println("Удаление задачи по id=1.\n");
-
         System.out.println("Удаление 2 задачи : " + manager.removeTaskById(1));
-
         System.out.println("Список после удаления 2 задачи");
+
         for(Task task : manager.getListOfTasks()) {
             System.out.println(task);
         }
 
         System.out.println("Получение задачи по id=0.\n");
-
         System.out.println(manager.getTaskById(0));
-
-
-
-
-
-
-
 
         System.out.println("============================Тестирование эпиков========================\n");
         System.out.println("1. Получение списка всех эпиков.\n");
@@ -149,17 +135,11 @@ public class Main {
         System.out.println("===================================");
         System.out.println("3. Получение эпика по идентификатору.\n ");
         System.out.println("Получение эпика по id=1.\n");
-
         System.out.println(manager.getEpicById(1));
-
         System.out.println("Получение эпика по id=0.\n");
-
         System.out.println(manager.getEpicById(0));
-
-
         System.out.println("===================================");
         System.out.println("4. Создание нового эпика.\n ");
-
         System.out.println("Список до создания нового эпика");
         for(Task task : manager.getListOfEpics()) {
             System.out.println(task);
@@ -167,7 +147,6 @@ public class Main {
 
         Epic epic3 = new Epic("epic3", "epic3");
         System.out.println("Создался новый эпик " + manager.addEpic(epic3));
-
         System.out.println("Список после создания нового эпика");
 
         for(Task task : manager.getListOfEpics()) {
@@ -177,38 +156,30 @@ public class Main {
         System.out.println("===================================");
         System.out.println("5. Обновление эпиков.\n ");
         System.out.println("Список до изменения состояния 1 эпика");
-        for(Task task : manager.getListOfTasks()) {
-            System.out.println(task);
-        }
-        task1.changeState();
-        System.out.println("1 задача изменила состояние на IN_PROGRESS" + manager.updateEpic(epic1));
 
+        for(Epic epic : manager.getListOfEpics()) {
+            System.out.println(epic);
+        }
+        epic1.setName("epic11");
+        System.out.println("1 эпик изменил название на epic11" + manager.updateEpic(epic1));
         System.out.println("Список после изменения состояния 1 эпика");
-        for(Task task : manager.getListOfTasks()) {
-            System.out.println(task);
+        for(Epic epic : manager.getListOfEpics()) {
+            System.out.println(epic);
         }
 
         System.out.println("===================================");
         System.out.println("6. Удаление эпика' по идентификатору.\n ");
+        System.out.println("Список до удаления 1 эпика");
 
-        System.out.println("Список до удаления 2 эпика");
         for(Task task : manager.getListOfEpics()) {
             System.out.println(task);
         }
-        System.out.println("Удаление задачи по id=1.\n");
-
-        System.out.println("Удаление 2 эпика : " + manager.removeEpicById(1));
-
+        System.out.println("Удаление эпика по id=1.\n");
+        System.out.println("Удаление 1 эпика : " + manager.removeEpicById(1));
         System.out.println("Список после удаления 2 эпика");
         for(Task task : manager.getListOfEpics()) {
             System.out.println(task);
         }
-
-
-
-
-
-
 
         System.out.println("============================Тестирование подзадач========================\n");
         System.out.println("1. Получение списка всех подзадач.\n");
@@ -217,37 +188,31 @@ public class Main {
             System.out.println(task);
         }
 
-        System.out.println("===================================");
-        System.out.println("2. Удаление всех подзадач.\n ");
-        System.out.println("Список до удаления.\n");
-        for(Task task : manager.getListOfSubTasks()) {
-            System.out.println(task);
-        }
-        manager.removeAllSubTasks();
-
-        System.out.println("Список после удаления. ============================================\n");
-        if(manager.getListOfSubTasks().isEmpty()) {
-            System.out.println("Список эпиков пуст\n");
-        } else {
-            for(Task task : manager.getListOfSubTasks()) {
-                System.out.println(task);
-            }
-        }
+//        System.out.println("===================================");
+//        System.out.println("2. Удаление всех подзадач.\n ");
+//        System.out.println("Список до удаления.\n");
+//        for(Task task : manager.getListOfSubTasks()) {
+//            System.out.println(task);
+//        }
+//        manager.removeAllSubTasks();
+//
+//        System.out.println("Список после удаления. ============================================\n");
+//        if(manager.getListOfSubTasks().isEmpty()) {
+//            System.out.println("Список эпиков пуст\n");
+//        } else {
+//            for(Task task : manager.getListOfSubTasks()) {
+//                System.out.println(task);
+//            }
+//        }
 
         System.out.println("===================================");
         System.out.println("3. Получение сабтаска по идентификатору.\n ");
+        System.out.println("Получение сабтаска по id=3.\n");
+        System.out.println(manager.getSubTaskById(3));
         System.out.println("Получение сабтаска по id=1.\n");
-
         System.out.println(manager.getSubTaskById(1));
-
-        System.out.println("Получение сабтаска по id=0.\n");
-
-        System.out.println(manager.getSubTaskById(0));
-
-
         System.out.println("===================================");
         System.out.println("4. Создание нового сабтаска.\n ");
-
         System.out.println("Список до создания нового сабтаска");
         for(Task task : manager.getListOfSubTasks()) {
             System.out.println(task);
@@ -255,7 +220,6 @@ public class Main {
 
         SubTask subTask4 = new SubTask(epic2, "subTask4", "subTask4");
         System.out.println("Создался новый сабтаск " + manager.addSubTask(subTask4));
-
         System.out.println("Список после создания нового сабтаска");
 
         for(Task task : manager.getListOfSubTasks()) {
@@ -264,45 +228,36 @@ public class Main {
 
         System.out.println("===================================");
         System.out.println("5. Обновление сабтаска.\n ");
-        System.out.println("Список до изменения состояния 1 сабтаска");
+        System.out.println("Список до изменения состояния 3 сабтаска");
         for(Task task : manager.getListOfSubTasks()) {
             System.out.println(task);
         }
-        subTask1.changeState();
-        subTask1.changeState();
-        subTask2.changeState();
-        subTask2.changeState();
+        subTask3.changeState();
 
-        System.out.println("1 подзадача изменила состояние на IN_PROGRESS" + manager.updateSubTask(subTask1));
-
-        System.out.println("Список подзадач после изменения состояния 1 подзадачи");
+        System.out.println("3 подзадача изменила состояние на IN_PROGRESS " + manager.updateSubTask(subTask3));
+        System.out.println("Список подзадач после изменения состояния 3 подзадачи");
         for(Task task : manager.getListOfSubTasks()) {
             System.out.println(task);
         }
 
-        System.out.println("Список эпиков после изменения состояния 1 подзадачи");
-        for(Task task : manager.getListOfEpics()) {
-            System.out.println(task);
+        System.out.println("Список эпиков после изменения состояния 3 подзадачи");
+        for(Epic epic : manager.getListOfEpics()) {
+            System.out.println(epic);
         }
 
         System.out.println("===================================");
         System.out.println("6. Удаление подзадачи по идентификатору.\n ");
-
-        System.out.println("Список до удаления 2 подзадачи");
+        System.out.println("Список до удаления 3 подзадачи");
         for(Task task : manager.getListOfSubTasks()) {
             System.out.println(task);
         }
 
-        System.out.println(manager.getSubTasksOfEpic(epic1));
         System.out.println("Удаление задачи по id=1.\n");
-
-        System.out.println("Удаление 2 эпика : " + manager.removeSubTaskById(1));
-
-        System.out.println("Список после удаления 2 подзадачи");
+        System.out.println("Удаление 3 подзадачи : " + manager.removeSubTaskById(3));
+        System.out.println("Список после удаления 3 подзадачи");
         for(Task task : manager.getListOfSubTasks()) {
             System.out.println(task);
         }
-
         System.out.println(manager.getSubTasksOfEpic(epic1));
     }
 }
