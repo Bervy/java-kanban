@@ -44,12 +44,13 @@ public class Manager {
     }
 
     public boolean addTask (Task newTask) {
+        taskId++;
         if (tasks.containsValue(newTask)) {
+            taskId--;
             return false;
         } else {
             tasks.put(taskId, newTask);
             newTask.setId(taskId);
-            taskId++;
             return true;
         }
     }
@@ -83,12 +84,13 @@ public class Manager {
     }
 
     public boolean addEpic (Epic newEpic) {
+        epicId++;
         if (epics.containsValue(newEpic)) {
+            epicId--;
             return false;
         } else {
             epics.put(epicId, newEpic);
             newEpic.setId(epicId);
-            epicId++;
             return true;
         }
     }
@@ -103,7 +105,18 @@ public class Manager {
     }
 
     public boolean removeEpicById (int epicId) {
-        return epics.remove(epicId) != null;
+        HashMap<Integer, SubTask> copySubTasks = new HashMap<>(subTasks);
+        if(epics.get(epicId) != null) {
+            for(SubTask subTask : epics.get(epicId).getSubTasks()) {
+                for(SubTask subTask1 : copySubTasks.values()) {
+                    if(subTask.equals(subTask1)) {
+                        subTasks.remove(subTask1.getId());
+                    }
+                }
+            }
+            return epics.remove(epicId) != null;
+        }
+        return false;
     }
 
     /**
@@ -167,12 +180,13 @@ public class Manager {
     }
 
     public boolean addSubTask (SubTask newSubtask) {
+        subTaskId++;
         if(subTasks.containsValue(newSubtask)) {
+            subTaskId--;
             return false;
         } else {
             subTasks.put(subTaskId, newSubtask);
             newSubtask.setId(subTaskId);
-            subTaskId++;
             newSubtask.getEpic().getSubTasks().add(newSubtask);
             return true;
         }
@@ -181,18 +195,7 @@ public class Manager {
     public boolean updateSubTask (SubTask updatedSubTask) {
         if(subTasks.containsKey(updatedSubTask.getId())) {
             subTasks.put(updatedSubTask.getId(), updatedSubTask);
-            Epic foundedEpic = getEpicBySubTask(updatedSubTask);
-            if (foundedEpic != null) {
-                for(SubTask subTask : foundedEpic.getSubTasks()) {
-                    if (Objects.equals(subTask.getId(), updatedSubTask.getId())) {
-                        foundedEpic.getSubTasks().set(updatedSubTask.getId(), updatedSubTask);
-                        setStatusEpic(foundedEpic);
-                        return true;
-                    }
-                }
-            } else {
-                return false;
-            }
+            setStatusEpic(Objects.requireNonNull(getEpicBySubTask(updatedSubTask)));
         }
         return false;
     }
