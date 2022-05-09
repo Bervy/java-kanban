@@ -1,5 +1,6 @@
 package ru.yandex.practicum.tasks;
 
+import ru.yandex.practicum.States;
 import java.util.ArrayList;
 /**
  * @author Vlad Osipov
@@ -22,22 +23,6 @@ public class Epic extends Task {
         super.state = state;
     }
 
-    public String getName() {
-        return super.name;
-    }
-
-    public void setName(String name) {
-        super.name = name;
-    }
-
-    public String getDescription() {
-        return super.description;
-    }
-
-    public void setDescription(String description) {
-        super.description = description;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -49,11 +34,10 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "Epic{" +
-                "subTasks=" + subTasks +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", state=" + state +
-                '}';
+                "}\n";
     }
 }

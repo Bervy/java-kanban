@@ -1,0 +1,14 @@
+package ru.yandex.practicum.history;
+
+import ru.yandex.practicum.tasks.Task;
+import java.util.List;
+/**
+ * @author Vlad Osipov
+ * @create 2022-05-09   19:05
+ */
+public interface HistoryManager {
+
+    void add(Task task);
+
+    List<Task> getHistory();
+}

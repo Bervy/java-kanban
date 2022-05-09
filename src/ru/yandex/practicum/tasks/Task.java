@@ -1,5 +1,6 @@
 package ru.yandex.practicum.tasks;
 
+import ru.yandex.practicum.States;
 /**
  * @author Vlad Osipov
  * @create 2022-04-23   10:01
@@ -11,25 +12,13 @@ public class Task {
     protected int id;
     protected States state;
 
-    public enum States {
-        NEW,
-        IN_PROGRESS,
-        DONE
-    }
+
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.id = 0;
         this.state = States.NEW;
-    }
-    //Временный метод для проверки состояний задачи
-    public void changeState () {
-        if (state.equals(States.NEW)) {
-            state = States.IN_PROGRESS;
-        } else if (state.equals(States.IN_PROGRESS)) {
-            state = States.DONE;
-        }
     }
 
     public int getId() {
@@ -42,10 +31,6 @@ public class Task {
 
     public States getState() {
         return state;
-    }
-
-    public void setState(States state) {
-        this.state = state;
     }
 
     public String getName() {
@@ -66,12 +51,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "Task {" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", state='" + state + '\'' +
-                '}';
+                "} \n";
     }
 
     @Override

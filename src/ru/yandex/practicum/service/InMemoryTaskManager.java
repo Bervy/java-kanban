@@ -1,5 +1,7 @@
-package ru.yandex.practicum.controller;
+package ru.yandex.practicum.service;
 
+import ru.yandex.practicum.history.HistoryManager;
+import ru.yandex.practicum.States;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
@@ -12,49 +14,56 @@ import java.util.Objects;
  * @author Vlad Osipov
  * @create 2022-04-23   10:00
  */
-public class Manager {
+public class InMemoryTaskManager implements TaskManager {
 
+    private Integer generatorId;
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, SubTask> subTasks;
-    private Integer taskId;
-    private Integer epicId;
-    private Integer subTaskId;
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
 
-    public Manager() {
+
+    public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subTasks = new HashMap<>();
-        this.taskId = 0;
-        this.epicId = 0;
-        this.subTaskId = 0;
+        this.generatorId = 0;
     }
 
+    @Override
     public List<Task> getListOfTasks () {
         return new ArrayList<>(tasks.values());
     }
 
+    @Override
     public void removeAllTasks () {
         tasks.clear();
-        taskId = 0;
     }
 
+    @Override
     public Task getTaskById (int taskId) {
-        return tasks.getOrDefault(taskId, null);
+        if(tasks.getOrDefault(taskId, null) != null) {
+            historyManager.add(tasks.get(taskId));
+            return tasks.get(taskId);
+        } else {
+            return null;
+        }
     }
 
+    @Override
     public boolean addTask (Task newTask) {
-        taskId++;
+        generatorId++;
         if (tasks.containsValue(newTask)) {
-            taskId--;
+            generatorId--;
             return false;
         } else {
-            tasks.put(taskId, newTask);
-            newTask.setId(taskId);
+            tasks.put(generatorId, newTask);
+            newTask.setId(generatorId);
             return true;
         }
     }
 
+    @Override
     public boolean updateTask (Task updatedTask) {
         if (tasks.containsKey(updatedTask.getId())) {
             tasks.put(updatedTask.getId(), updatedTask);
@@ -64,37 +73,46 @@ public class Manager {
         }
     }
 
+    @Override
     public boolean removeTaskById (int taskId) {
         return tasks.remove(taskId) != null;
     }
 
+    @Override
     public List<Epic> getListOfEpics () {
         return new ArrayList<>(epics.values());
     }
 
+    @Override
     public void removeAllEpics () {
         epics.clear();
         subTasks.clear();
-        epicId = 0;
-        subTaskId = 0;
     }
 
+    @Override
     public Epic getEpicById (int epicId) {
-        return epics.getOrDefault(epicId, null);
+        if(epics.getOrDefault(epicId, null) != null) {
+            historyManager.add(epics.get(epicId));
+            return epics.get(epicId);
+        } else {
+            return null;
+        }
     }
 
+    @Override
     public boolean addEpic (Epic newEpic) {
-        epicId++;
+        generatorId++;
         if (epics.containsValue(newEpic)) {
-            epicId--;
+            generatorId--;
             return false;
         } else {
-            epics.put(epicId, newEpic);
-            newEpic.setId(epicId);
+            epics.put(generatorId, newEpic);
+            newEpic.setId(generatorId);
             return true;
         }
     }
 
+    @Override
     public boolean updateEpic (Epic updatedEpic) {
         if (epics.containsKey(updatedEpic.getId())) {
             epics.put(updatedEpic.getId(), updatedEpic);
@@ -104,19 +122,20 @@ public class Manager {
         }
     }
 
+    @Override
     public boolean removeEpicById (int epicId) {
         HashMap<Integer, SubTask> copySubTasks = new HashMap<>(subTasks);
-        if(epics.get(epicId) != null) {
-            for(SubTask subTask : epics.get(epicId).getSubTasks()) {
-                for(SubTask subTask1 : copySubTasks.values()) {
-                    if(subTask.equals(subTask1)) {
-                        subTasks.remove(subTask1.getId());
-                    }
+        if(epics.get(epicId) == null) {
+            return false;
+        }
+        for(SubTask subTask : epics.get(epicId).getSubTasks()) {
+            for(SubTask subTask1 : copySubTasks.values()) {
+                if(subTask.equals(subTask1)) {
+                    subTasks.remove(subTask1.getId());
                 }
             }
-            return epics.remove(epicId) != null;
         }
-        return false;
+        return epics.remove(epicId) != null;
     }
 
     /**
@@ -140,21 +159,22 @@ public class Manager {
         int count = 0;
 
         for (SubTask s : subTasksOfFoundedEpic) {
-            if(s.getState().equals(Task.States.IN_PROGRESS)) {
+            if(s.getState() == States.IN_PROGRESS) {
                 count++;
-            } else if (s.getState().equals(Task.States.DONE)) {
+            } else if (s.getState() == States.DONE) {
                 count +=2;
             }
         }
         if (count == 0) {
-            epic.setState(Task.States.NEW);
+            epic.setState(States.NEW);
         } else if (count == subTasksOfFoundedEpic.size() * 2) {
-            epic.setState(Task.States.DONE);
+            epic.setState(States.DONE);
         } else {
-            epic.setState(Task.States.IN_PROGRESS);
+            epic.setState(States.IN_PROGRESS);
         }
     }
 
+    @Override
     public ArrayList<SubTask> getSubTasksOfEpic (Epic epic) {
         if(epics.containsKey(epic.getId())) {
             return epic.getSubTasks();
@@ -163,35 +183,44 @@ public class Manager {
         }
     }
 
+    @Override
     public List<SubTask> getListOfSubTasks () {
         return new ArrayList<>(subTasks.values());
     }
 
+    @Override
     public void removeAllSubTasks () {
         subTasks.clear();
         for(Epic epic : epics.values()) {
             epic.getSubTasks().clear();
         }
-        subTaskId = 0;
     }
 
+    @Override
     public SubTask getSubTaskById (int subTaskId) {
-        return subTasks.getOrDefault(subTaskId, null);
+        if(subTasks.getOrDefault(subTaskId, null) != null) {
+            historyManager.add(subTasks.get(subTaskId));
+            return subTasks.get(subTaskId);
+        } else {
+            return null;
+        }
     }
 
+    @Override
     public boolean addSubTask (SubTask newSubtask) {
-        subTaskId++;
+        generatorId++;
         if(subTasks.containsValue(newSubtask)) {
-            subTaskId--;
+            generatorId--;
             return false;
         } else {
-            subTasks.put(subTaskId, newSubtask);
-            newSubtask.setId(subTaskId);
+            subTasks.put(generatorId, newSubtask);
+            newSubtask.setId(generatorId);
             newSubtask.getEpic().getSubTasks().add(newSubtask);
             return true;
         }
     }
 
+    @Override
     public boolean updateSubTask (SubTask updatedSubTask) {
         if(subTasks.containsKey(updatedSubTask.getId())) {
             subTasks.put(updatedSubTask.getId(), updatedSubTask);
@@ -200,6 +229,7 @@ public class Manager {
         return false;
     }
 
+    @Override
     public boolean removeSubTaskById (int subTaskId) {
         SubTask removedSubTask = subTasks.remove(subTaskId);
         if(removedSubTask != null) {
@@ -211,5 +241,10 @@ public class Manager {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<Task> getHistory() {
+       return historyManager.getHistory();
     }
 }
