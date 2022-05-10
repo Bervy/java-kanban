@@ -10,6 +10,7 @@ import java.util.List;
 public class InMemoryHistoryManager implements HistoryManager {
 
     private final List<Task> browsingHistoryTasks = new ArrayList<>();
+
     @Override
     public void add(Task task) {
         if (browsingHistoryTasks.size() == 10) {
