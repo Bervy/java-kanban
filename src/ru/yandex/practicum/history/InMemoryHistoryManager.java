@@ -9,11 +9,13 @@ import java.util.List;
  */
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private final List<Task> browsingHistoryTasks = new ArrayList<>();
+    private final int MAX_SIZE_OF_BROWSING_HISTORY_TASKS = 10;
+    private final List<Task> browsingHistoryTasks = new ArrayList<>(MAX_SIZE_OF_BROWSING_HISTORY_TASKS);
+
 
     @Override
     public void add(Task task) {
-        if (browsingHistoryTasks.size() == 10) {
+        if (browsingHistoryTasks.size() == MAX_SIZE_OF_BROWSING_HISTORY_TASKS) {
             browsingHistoryTasks.remove(0);
         }
         browsingHistoryTasks.add(task);
