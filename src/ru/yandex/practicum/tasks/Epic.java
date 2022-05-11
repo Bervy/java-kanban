@@ -2,6 +2,9 @@ package ru.yandex.practicum.tasks;
 
 import ru.yandex.practicum.States;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 /**
  * @author Vlad Osipov
  * @create 2022-04-23   10:03
@@ -15,7 +18,7 @@ public class Epic extends Task {
         this.subTasks = new ArrayList<>();
     }
 
-    public ArrayList<SubTask> getSubTasks() {
+    public List<SubTask> getSubTasks() {
         return subTasks;
     }
 
@@ -29,6 +32,11 @@ public class Epic extends Task {
         if (o == null || getClass() != o.getClass()) return false;
         Epic epic = (Epic) o;
         return epic.id == id && epic.name.equals(name) && epic.description.equals(description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(subTasks);
     }
 
     @Override

@@ -1,4 +1,7 @@
 package ru.yandex.practicum.tasks;
+
+import java.util.Objects;
+
 /**
  * @author Vlad Osipov
  * @create 2022-04-23   10:02
@@ -17,6 +20,19 @@ public class SubTask extends Task {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SubTask)) return false;
+        SubTask subTask = (SubTask) o;
+        return subTask.id == id && subTask.name.equals(name) && subTask.description.equals(description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(epic);
+    }
+
+    @Override
     public String toString() {
         return "SubTask{" +
                 "epic=" + epic.name +
@@ -25,13 +41,5 @@ public class SubTask extends Task {
                 ", id=" + id +
                 ", state=" + state +
                 "}\n";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SubTask)) return false;
-        SubTask subTask = (SubTask) o;
-        return subTask.id == id && subTask.name.equals(name) && subTask.description.equals(description);
     }
 }

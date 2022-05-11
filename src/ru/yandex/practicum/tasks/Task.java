@@ -1,6 +1,9 @@
 package ru.yandex.practicum.tasks;
 
 import ru.yandex.practicum.States;
+
+import java.util.Objects;
+
 /**
  * @author Vlad Osipov
  * @create 2022-04-23   10:01
@@ -50,6 +53,19 @@ public class Task {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+        Task task = (Task) o;
+        return task.id == id && task.name.equals(name) && task.description.equals(description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, id, state);
+    }
+
+    @Override
     public String toString() {
         return "Task {" +
                 "name='" + name + '\'' +
@@ -57,13 +73,5 @@ public class Task {
                 ", id=" + id +
                 ", state='" + state + '\'' +
                 "} \n";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Task)) return false;
-        Task task = (Task) o;
-        return task.id == id && task.name.equals(name) && task.description.equals(description);
     }
 }
