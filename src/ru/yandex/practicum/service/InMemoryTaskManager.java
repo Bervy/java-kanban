@@ -6,10 +6,8 @@ import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+
 /**
  * @author Vlad Osipov
  * @create 2022-04-23   10:00
@@ -177,11 +175,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<SubTask> getSubTasksOfEpic (Epic epic) {
+    public List<SubTask> getSubTasksOfEpic (Epic epic) {
         if(epics.containsKey(epic.getId())) {
             return epic.getSubTasks();
         } else {
-            return null;
+            return Collections.emptyList();
         }
     }
 
