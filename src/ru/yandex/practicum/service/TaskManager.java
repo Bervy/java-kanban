@@ -4,7 +4,6 @@ import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.SubTask;
 import ru.yandex.practicum.tasks.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +36,7 @@ public interface TaskManager {
 
     boolean removeEpicById(int epicId);
 
-    ArrayList<SubTask> getSubTasksOfEpic(Epic epic);
+    List<SubTask> getSubTasksOfEpic(Epic epic);
 
     List<SubTask> getListOfSubTasks();
 
