@@ -18,11 +18,11 @@ public interface TaskManager {
 
     Task getTaskById(int taskId);
 
-    boolean addTask(Task newTask);
+    void addTask(Task newTask);
 
-    boolean updateTask(Task updatedTask);
+    void updateTask(Task updatedTask);
 
-    boolean removeTaskById(int taskId);
+    void removeTaskById(int taskId);
 
     List<Epic> getListOfEpics();
 
@@ -30,11 +30,11 @@ public interface TaskManager {
 
     Epic getEpicById(int epicId);
 
-    boolean addEpic(Epic newEpic);
+    void addEpic(Epic newEpic);
 
-    boolean updateEpic(Epic updatedEpic);
+    void updateEpic(Epic updatedEpic);
 
-    boolean removeEpicById(int epicId);
+    void removeEpicById(int epicId);
 
     List<SubTask> getSubTasksOfEpic(Epic epic);
 
@@ -44,11 +44,11 @@ public interface TaskManager {
 
     SubTask getSubTaskById(int subTaskId);
 
-    boolean addSubTask(SubTask newSubtask);
+    void addSubTask(SubTask newSubtask);
 
-    boolean updateSubTask(SubTask updatedSubTask);
+    void updateSubTask(SubTask updatedSubTask);
 
-    boolean removeSubTaskById(int subTaskId);
+    void removeSubTaskById(int subTaskId);
 
     List<Task> getHistory();
 }

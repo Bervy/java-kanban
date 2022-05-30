@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        testsFourthSprint();
+        testsFiveSprint();
     }
 
     public static  void testsThirdSprint() {
@@ -75,7 +75,7 @@ public class Main {
         }
 
         Task task3 = new Task("Task3", "Task3");
-        System.out.println("Создалась новая задача " + manager.addTask(task3));
+        System.out.println("Создалась новая задача ");
         System.out.println("Список после создания задачи");
 
         for(Task task : manager.getListOfTasks()) {
@@ -90,7 +90,7 @@ public class Main {
             System.out.println(task);
         }
         //task1.changeState();
-        System.out.println("1 задача изменила состояние на IN_PROGRESS" + manager.updateTask(task1));
+        System.out.println("1 задача изменила состояние на IN_PROGRESS");
         System.out.println("Список после изменения состояния 1 задачи");
 
         for(Task task : manager.getListOfTasks()) {
@@ -105,7 +105,7 @@ public class Main {
             System.out.println(task);
         }
         System.out.println("Удаление задачи по id=1.\n");
-        System.out.println("Удаление 2 задачи : " + manager.removeTaskById(1));
+        System.out.println("Удаление 2 задачи : ");
         System.out.println("Список после удаления 2 задачи");
 
         for(Task task : manager.getListOfTasks()) {
@@ -153,7 +153,7 @@ public class Main {
         }
 
         Epic epic3 = new Epic("epic3", "epic3");
-        System.out.println("Создался новый эпик " + manager.addEpic(epic3));
+        System.out.println("Создался новый эпик ");
         System.out.println("Список после создания нового эпика");
 
         for(Task task : manager.getListOfEpics()) {
@@ -168,7 +168,7 @@ public class Main {
             System.out.println(epic);
         }
         epic1.setName("epic11");
-        System.out.println("1 эпик изменил название на epic11" + manager.updateEpic(epic1));
+        System.out.println("1 эпик изменил название на epic11");
         System.out.println("Список после изменения состояния 1 эпика");
         for(Epic epic : manager.getListOfEpics()) {
             System.out.println(epic);
@@ -182,7 +182,7 @@ public class Main {
             System.out.println(task);
         }
         System.out.println("Удаление эпика по id=1.\n");
-        System.out.println("Удаление 1 эпика : " + manager.removeEpicById(1));
+        System.out.println("Удаление 1 эпика : ");
         System.out.println("Список после удаления 2 эпика");
         for(Task task : manager.getListOfEpics()) {
             System.out.println(task);
@@ -226,7 +226,7 @@ public class Main {
         }
 
         SubTask subTask4 = new SubTask(epic2, "subTask4", "subTask4");
-        System.out.println("Создался новый сабтаск " + manager.addSubTask(subTask4));
+        System.out.println("Создался новый сабтаск ");
         System.out.println("Список после создания нового сабтаска");
 
         for(Task task : manager.getListOfSubTasks()) {
@@ -241,7 +241,7 @@ public class Main {
         }
        // subTask3.changeState();
 
-        System.out.println("3 подзадача изменила состояние на IN_PROGRESS " + manager.updateSubTask(subTask3));
+        System.out.println("3 подзадача изменила состояние на IN_PROGRESS ");
         System.out.println("Список подзадач после изменения состояния 3 подзадачи");
         for(Task task : manager.getListOfSubTasks()) {
             System.out.println(task);
@@ -260,7 +260,7 @@ public class Main {
         }
 
         System.out.println("Удаление задачи по id=1.\n");
-        System.out.println("Удаление 3 подзадачи : " + manager.removeSubTaskById(3));
+        System.out.println("Удаление 3 подзадачи : ");
         System.out.println("Список после удаления 3 подзадачи");
         for(Task task : manager.getListOfSubTasks()) {
             System.out.println(task);
@@ -315,6 +315,58 @@ public class Main {
         System.out.println(manager.getHistory().toString());
         manager.getSubTaskById(6);
         System.out.println(10 + " задач в истории и удалилась первая задача");
+        System.out.println(manager.getHistory().toString());
+    }
+
+    public static void testsFiveSprint() {
+        Task task1 = new Task("Task1", "Task1");
+        Task task2 = new Task("Task2", "Task2");
+
+        Epic epic1 = new Epic("epic1", "epic1");
+        Epic epic2 = new Epic("epic2", "epic2");
+
+        SubTask subTask1 = new SubTask(epic1, "subTask1", "subTask1");
+        SubTask subTask2 = new SubTask(epic1, "subTask2", "subTask2");
+        SubTask subTask3 = new SubTask(epic2, "subTask3", "subTask3");
+
+        InMemoryTaskManager manager = new InMemoryTaskManager();
+
+        manager.addTask(task1);
+        manager.addTask(task2);
+
+        manager.addEpic(epic1);
+        manager.addEpic(epic2);
+
+        manager.addSubTask(subTask1);
+        manager.addSubTask(subTask2);
+        manager.addSubTask(subTask3);
+
+        manager.getTaskById(1);
+        System.out.println(1 + " задача(ч) в истории");
+        System.out.println(manager.getHistory().toString());
+        manager.getTaskById(2);
+        System.out.println(2 + " задача(ч) в истории");
+        System.out.println(manager.getHistory().toString());
+        manager.getEpicById(3);
+        System.out.println(3 + " задача(ч) в истории");
+        System.out.println(manager.getHistory().toString());
+        manager.getEpicById(4);
+        System.out.println(4 + " задача(ч) в истории");
+        System.out.println(manager.getHistory().toString());
+        manager.getEpicById(4);
+        System.out.println(4 + " задача(ч) в истории");
+        System.out.println(manager.getHistory().toString());
+        manager.removeEpicById(4);
+        System.out.println(3 + " задача(ч) в истории");
+        System.out.println(manager.getHistory().toString());
+        manager.getSubTaskById(5);
+        System.out.println(4 + " задача(ч) в истории");
+        System.out.println(manager.getHistory().toString());
+        manager.getSubTaskById(6);
+        System.out.println(5 + " задача(ч) в истории");
+        System.out.println(manager.getHistory().toString());
+        manager.getSubTaskById(6);
+        System.out.println(5 + " задач в истории и удалилась первая задача");
         System.out.println(manager.getHistory().toString());
     }
 }
