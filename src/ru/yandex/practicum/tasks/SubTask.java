@@ -8,15 +8,22 @@ import java.util.Objects;
  */
 public class SubTask extends Task {
 
-    private final Epic epic;
+    private final Integer epicId;
 
-    public SubTask(Epic epic, String name, String description) {
+    public SubTask(Integer epicId, String name, String description) {
         super(name, description);
-        this.epic = epic;
+        this.epicId = epicId;
     }
 
-    public Epic getEpic() {
-        return epic;
+    public SubTask(String value) {
+        super(value);
+        String[] subTask = value.split(",");
+        this.epicId = Integer.parseInt(subTask[5]);
+
+    }
+
+    public Integer getEpicId() {
+        return epicId;
     }
 
     @Override
@@ -29,17 +36,11 @@ public class SubTask extends Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(epic);
+        return Objects.hash(epicId);
     }
 
     @Override
     public String toString() {
-        return "SubTask{" +
-                "epic=" + epic.name +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", state=" + state +
-                "}\n";
+        return id + ",SUBTASK," + name + "," + state + "," + description + "," + epicId;
     }
 }

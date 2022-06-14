@@ -7,7 +7,7 @@ import ru.yandex.practicum.tasks.Task;
  * @create 2022-05-30   21:05
  */
 public class Node {
-    private Task data;
+    private final Task data;
     private Node next;
     private Node prev;
 
@@ -21,12 +21,12 @@ public class Node {
         return next;
     }
 
-    public Node getPrev() {
-        return prev;
-    }
-
     public void setNext(Node next) {
         this.next = next;
+    }
+
+    public Node getPrev() {
+        return prev;
     }
 
     public void setPrev(Node prev) {
@@ -39,10 +39,6 @@ public class Node {
 
     @Override
     public String toString() {
-        return "Node{" +
-                "data=" + data +
-                ", next=" + next +
-                ", prev=" + prev +
-                '}';
+        return "Node{" + "data=" + data + ", next=" + next + ", prev=" + prev + '}';
     }
 }

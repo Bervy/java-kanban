@@ -1,6 +1,7 @@
 package ru.yandex.practicum.tasks;
 
 import ru.yandex.practicum.States;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,15 +12,21 @@ import java.util.Objects;
  */
 public class Epic extends Task {
 
-    private final ArrayList<SubTask> subTasks;
+    private final ArrayList<Integer> subTasksIds;
 
     public Epic(String name, String description) {
         super(name, description);
-        this.subTasks = new ArrayList<>();
+        this.subTasksIds = new ArrayList<>();
     }
 
-    public List<SubTask> getSubTasks() {
-        return subTasks;
+    public Epic(String value) {
+        super(value);
+        this.subTasksIds = new ArrayList<>();
+
+    }
+
+    public List<Integer> getSubTasks() {
+        return subTasksIds;
     }
 
     public void setState(States state) {
@@ -36,16 +43,14 @@ public class Epic extends Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(subTasks);
+        return Objects.hash(subTasksIds);
     }
 
     @Override
     public String toString() {
-        return "Epic{" +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", state=" + state +
-                "}\n";
+        return id +
+                ",EPIC," + name +
+                "," + state + "," +
+                description;
     }
 }

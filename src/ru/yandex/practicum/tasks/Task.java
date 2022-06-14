@@ -16,12 +16,19 @@ public class Task {
     protected States state;
 
 
-
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.id = 0;
         this.state = States.NEW;
+    }
+
+    public Task(String value) {
+        String[] task = value.split(",");
+        this.id = Integer.parseInt(task[0]);
+        this.name = task[2];
+        this.state = States.valueOf(task[3]);
+        this.description = task[4];
     }
 
     public int getId() {
@@ -67,11 +74,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task {" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", state='" + state + '\'' +
-                "} \n";
+        return id + ",TASK," + name + "," + state + "," + description;
     }
 }
