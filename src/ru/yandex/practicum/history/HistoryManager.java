@@ -1,6 +1,6 @@
 package ru.yandex.practicum.history;
 
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.task.Task;
 
 import java.util.List;
 
