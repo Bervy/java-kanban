@@ -380,7 +380,7 @@ public class Main {
         SubTask subTask2 = new SubTask(3, "subTask2", "subTask2");
         SubTask subTask3 = new SubTask(4, "subTask3", "subTask3");
 
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+        TaskManager fileBackedTasksManager = Managers.getFileBacked();
 
         fileBackedTasksManager.addTask(task1);
         fileBackedTasksManager.addTask(task2);
@@ -420,7 +420,7 @@ public class Main {
         System.out.println(5 + " задач в истории и удалилась первая задача");
         System.out.println(fileBackedTasksManager.getHistory().toString());
 
-        FileBackedTasksManager managerFromFile = FileLoader.loadFromFile(new File(FileBackedTasksManager.FILENAME));
+        TaskManager managerFromFile = FileLoader.loadFromFile(new File(FileBackedTasksManager.FILENAME));
         for (Task task : managerFromFile.getListOfTasks()) {
             System.out.println(task);
         }
