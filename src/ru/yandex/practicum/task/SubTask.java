@@ -1,6 +1,4 @@
-package ru.yandex.practicum.tasks;
-
-import java.util.Objects;
+package ru.yandex.practicum.task;
 
 /**
  * @author Vlad Osipov
@@ -22,6 +20,12 @@ public class SubTask extends Task {
 
     }
 
+    @Override
+    public TaskType getTaskType() {
+        return TaskType.SUBTASK;
+    }
+
+
     public Integer getEpicId() {
         return epicId;
     }
@@ -36,7 +40,10 @@ public class SubTask extends Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(epicId);
+        int hashCode = super.hashCode();
+        hashCode += 31 * hashCode + name.hashCode() + description.hashCode() +
+                id + state.hashCode() + epicId;
+        return hashCode;
     }
 
     @Override

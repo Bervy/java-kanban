@@ -1,8 +1,4 @@
-package ru.yandex.practicum.tasks;
-
-import ru.yandex.practicum.States;
-
-import java.util.Objects;
+package ru.yandex.practicum.task;
 
 /**
  * @author Vlad Osipov
@@ -13,22 +9,26 @@ public class Task {
     protected String name;
     protected String description;
     protected int id;
-    protected States state;
+    protected State state;
 
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.id = 0;
-        this.state = States.NEW;
+        this.state = State.NEW;
     }
 
     public Task(String value) {
         String[] task = value.split(",");
         this.id = Integer.parseInt(task[0]);
         this.name = task[2];
-        this.state = States.valueOf(task[3]);
+        this.state = State.valueOf(task[3]);
         this.description = task[4];
+    }
+
+    public TaskType getTaskType() {
+        return TaskType.TASK;
     }
 
     public int getId() {
@@ -39,7 +39,7 @@ public class Task {
         this.id = id;
     }
 
-    public States getState() {
+    public State getState() {
         return state;
     }
 
@@ -69,7 +69,10 @@ public class Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, id, state);
+        int hashCode = super.hashCode();
+        hashCode += 31 * hashCode + name.hashCode() + description.hashCode() +
+                id + state.hashCode();
+        return hashCode;
     }
 
     @Override
