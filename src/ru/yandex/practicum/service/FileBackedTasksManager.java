@@ -17,7 +17,7 @@ import java.io.Writer;
 public class FileBackedTasksManager extends InMemoryTaskManager {
     public static final String FILENAME = "savedTasks.csv";
 
-    public void save() {
+    private void save() {
         try (Writer fileWriter = new FileWriter(FILENAME)) {
             fileWriter.write("id,type,name,status,description,epic\n");
             for (Task task : getListOfTasks()) {
