@@ -5,3 +5,15 @@ G.idea/sonarlint/issuestore/b/e/beaf4a4d910321a6ed0f5e0be74c034d4e2cdb52,a\0\a0
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 ?
 java-kanban.iml,d\f\df5dcbbd3f931c7c23855ccec11732ab4c8544f2
+w
+G.idea/sonarlint/issuestore/d/f/df5dcbbd3f931c7c23855ccec11732ab4c8544f2,c\c\cc1cc97682fc8c64ca34ddbfc67c56f94831fbf9
+w
+G.idea/sonarlint/issuestore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d,b\4\b4a0b63ce8560bbc5de0f9995c20cc861dc2adb3
+w
+G.idea/sonarlint/issuestore/a/0/a0018fadf969e817d7552cb6d6e208794f5af52f,8\d\8d4f9e747b563328cb4364a490127094899eb015
+\
+,.idea/inspectionProfiles/Project_Default.xml,4\9\496a238a6afa168dbaf6efd37bb459331589579c
+]
+-src/ru/yandex/practicum/service/Managers.java,7\7\771e084a0e9f5d14b89036b9a62f9642578ff807
+R
+"src/ru/yandex/practicum/Tasks.java,6\a\6a2d44bbd309b5387c5928cea52d786b2c3cf52f
