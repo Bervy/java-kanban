@@ -1,10 +1,10 @@
 package ru.yandex.practicum.service;
 
-import ru.yandex.practicum.States;
+import ru.yandex.practicum.task.State;
 import ru.yandex.practicum.history.HistoryManager;
-import ru.yandex.practicum.tasks.Epic;
-import ru.yandex.practicum.tasks.SubTask;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.task.Epic;
+import ru.yandex.practicum.task.SubTask;
+import ru.yandex.practicum.task.Task;
 
 import java.util.*;
 
@@ -164,18 +164,18 @@ public class InMemoryTaskManager implements TaskManager {
 
         for (Integer subTaskId : subTasksOfFoundedEpic) {
             SubTask subTask = subTasks.get(subTaskId);
-            if (subTask.getState() == States.IN_PROGRESS) {
+            if (subTask.getState() == State.IN_PROGRESS) {
                 count++;
-            } else if (subTask.getState() == States.DONE) {
+            } else if (subTask.getState() == State.DONE) {
                 count += 2;
             }
         }
         if (count == 0) {
-            epic.setState(States.NEW);
+            epic.setState(State.NEW);
         } else if (count == subTasksOfFoundedEpic.size() * 2) {
-            epic.setState(States.DONE);
+            epic.setState(State.DONE);
         } else {
-            epic.setState(States.IN_PROGRESS);
+            epic.setState(State.IN_PROGRESS);
         }
     }
 
