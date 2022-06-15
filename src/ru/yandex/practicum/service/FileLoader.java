@@ -43,7 +43,7 @@ public class FileLoader {
         return fileBackedTasksManager;
     }
 
-    public static void tasksFromString(String taskLine, FileBackedTasksManager fileBackedTasksManager) {
+    private static void tasksFromString(String taskLine, FileBackedTasksManager fileBackedTasksManager) {
         String[] taskFields = taskLine.split(",");
         if (taskFields[1].equals(String.valueOf(Tasks.TASK))) {
             Task task = new Task(taskLine);
@@ -59,7 +59,7 @@ public class FileLoader {
         }
     }
 
-    public static void historyFromString(String historyLine, FileBackedTasksManager fileBackedTasksManager) {
+    private static void historyFromString(String historyLine, FileBackedTasksManager fileBackedTasksManager) {
         String[] historyFields = historyLine.split(",");
         for (String field : historyFields) {
             int id = Integer.parseInt(field);
