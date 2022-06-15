@@ -1,8 +1,8 @@
 package ru.yandex.practicum.service;
 
-import ru.yandex.practicum.tasks.Epic;
-import ru.yandex.practicum.tasks.SubTask;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.task.Epic;
+import ru.yandex.practicum.task.SubTask;
+import ru.yandex.practicum.task.Task;
 
 import java.util.List;
 
