@@ -1,16 +1,16 @@
 package ru.yandex.practicum;
 
-import ru.yandex.practicum.service.InMemoryTaskManager;
-import ru.yandex.practicum.service.Managers;
-import ru.yandex.practicum.service.TaskManager;
-import ru.yandex.practicum.tasks.Epic;
-import ru.yandex.practicum.tasks.SubTask;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.service.*;
+import ru.yandex.practicum.task.Epic;
+import ru.yandex.practicum.task.SubTask;
+import ru.yandex.practicum.task.Task;
+
+import java.io.File;
 
 public class Main {
 
     public static void main(String[] args) {
-        //В данном спринте не нужен
+        testsSixSprint();
     }
 
     public static void testsThirdSprint() {
@@ -367,5 +367,72 @@ public class Main {
         manager.getSubTaskById(6);
         System.out.println(5 + " задач в истории и удалилась первая задача");
         System.out.println(manager.getHistory().toString());
+    }
+
+    public static void testsSixSprint() {
+        Task task1 = new Task("Task1", "Task1");
+        Task task2 = new Task("Task2", "Task2");
+
+        Epic epic1 = new Epic("epic1", "epic1");
+        Epic epic2 = new Epic("epic2", "epic2");
+
+        SubTask subTask1 = new SubTask(3, "subTask1", "subTask1");
+        SubTask subTask2 = new SubTask(3, "subTask2", "subTask2");
+        SubTask subTask3 = new SubTask(4, "subTask3", "subTask3");
+
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+
+        fileBackedTasksManager.addTask(task1);
+        fileBackedTasksManager.addTask(task2);
+
+        fileBackedTasksManager.addEpic(epic1);
+        fileBackedTasksManager.addEpic(epic2);
+
+        fileBackedTasksManager.addSubTask(subTask1);
+        fileBackedTasksManager.addSubTask(subTask2);
+        fileBackedTasksManager.addSubTask(subTask3);
+
+        fileBackedTasksManager.getTaskById(1);
+        System.out.println(1 + " задача(ч) в истории");
+        System.out.println(fileBackedTasksManager.getHistory().toString());
+        fileBackedTasksManager.getTaskById(2);
+        System.out.println(2 + " задача(ч) в истории");
+        System.out.println(fileBackedTasksManager.getHistory().toString());
+        fileBackedTasksManager.getEpicById(3);
+        System.out.println(3 + " задача(ч) в истории");
+        System.out.println(fileBackedTasksManager.getHistory().toString());
+        fileBackedTasksManager.getEpicById(4);
+        System.out.println(4 + " задача(ч) в истории");
+        System.out.println(fileBackedTasksManager.getHistory().toString());
+        fileBackedTasksManager.getEpicById(4);
+        System.out.println(4 + " задача(ч) в истории");
+        System.out.println(fileBackedTasksManager.getHistory().toString());
+        fileBackedTasksManager.removeEpicById(4);
+        System.out.println(3 + " задача(ч) в истории");
+        System.out.println(fileBackedTasksManager.getHistory().toString());
+        fileBackedTasksManager.getSubTaskById(5);
+        System.out.println(4 + " задача(ч) в истории");
+        System.out.println(fileBackedTasksManager.getHistory().toString());
+        fileBackedTasksManager.getSubTaskById(6);
+        System.out.println(5 + " задача(ч) в истории");
+        System.out.println(fileBackedTasksManager.getHistory().toString());
+        fileBackedTasksManager.getTaskById(1);
+        System.out.println(5 + " задач в истории и удалилась первая задача");
+        System.out.println(fileBackedTasksManager.getHistory().toString());
+
+        FileBackedTasksManager managerFromFile = FileLoader.loadFromFile(new File(FileBackedTasksManager.FILENAME));
+        for (Task task : managerFromFile.getListOfTasks()) {
+            System.out.println(task);
+        }
+        for (Epic epic : managerFromFile.getListOfEpics()) {
+            System.out.println(epic);
+        }
+        for (SubTask subTask : managerFromFile.getListOfSubTasks()) {
+            System.out.println(subTask);
+        }
+        System.out.println();
+        for (Task task : managerFromFile.getHistory()) {
+            System.out.print(task.getId() + ",");
+        }
     }
 }
