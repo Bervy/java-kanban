@@ -13,6 +13,10 @@ public interface Managers {
         return new InMemoryTaskManager();
     }
 
+    static TaskManager getFileBacked() {
+        return new FileBackedTasksManager();
+    }
+
     static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
