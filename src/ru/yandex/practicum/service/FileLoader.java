@@ -1,10 +1,10 @@
 package ru.yandex.practicum.service;
 
-import ru.yandex.practicum.Tasks;
 import ru.yandex.practicum.exceptions.ManagerLoadException;
-import ru.yandex.practicum.tasks.Epic;
-import ru.yandex.practicum.tasks.SubTask;
-import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practicum.task.TaskType;
+import ru.yandex.practicum.task.Epic;
+import ru.yandex.practicum.task.SubTask;
+import ru.yandex.practicum.task.Task;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,28 +34,31 @@ public class FileLoader {
                 }
             }
         } catch (IOException e) {
-            try {
-                throw new ManagerLoadException("Не удалось загрузить из файла ");
-            } catch (ManagerLoadException ex) {
-                ex.printStackTrace();
-            }
+            throw new ManagerLoadException("Не удалось загрузить файл " + e.getMessage());
         }
         return fileBackedTasksManager;
     }
 
     public static void tasksFromString(String taskLine, FileBackedTasksManager fileBackedTasksManager) {
         String[] taskFields = taskLine.split(",");
-        if (taskFields[1].equals(String.valueOf(Tasks.TASK))) {
-            Task task = new Task(taskLine);
-            fileBackedTasksManager.addTaskFromFile(task);
-        }
-        if (taskFields[1].equals(String.valueOf(Tasks.EPIC))) {
-            Epic epic = new Epic(taskLine);
-            fileBackedTasksManager.addEpicFromFile(epic);
-        }
-        if (taskFields[1].equals(String.valueOf(Tasks.SUBTASK))) {
-            SubTask subTask = new SubTask(taskLine);
-            fileBackedTasksManager.addSubTaskFromFile(subTask);
+        try{
+            TaskType taskType = TaskType.valueOf(taskFields[1]);
+            switch(taskType) {
+                case TASK:
+                    Task task = new Task(taskLine);
+                    fileBackedTasksManager.addTasksFromFile(task);
+                    break;
+                case EPIC:
+                    Epic epic = new Epic(taskLine);
+                    fileBackedTasksManager.addTasksFromFile(epic);
+                    break;
+                case SUBTASK:
+                    SubTask subTask = new SubTask(taskLine);
+                    fileBackedTasksManager.addTasksFromFile(subTask);
+                    break;
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Неверный тип задачи.");
         }
     }
 
