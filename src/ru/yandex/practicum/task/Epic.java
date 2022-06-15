@@ -1,10 +1,7 @@
-package ru.yandex.practicum.tasks;
-
-import ru.yandex.practicum.States;
+package ru.yandex.practicum.task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Vlad Osipov
@@ -22,14 +19,19 @@ public class Epic extends Task {
     public Epic(String value) {
         super(value);
         this.subTasksIds = new ArrayList<>();
-
     }
+
+    @Override
+    public TaskType getTaskType() {
+        return TaskType.EPIC;
+    }
+
 
     public List<Integer> getSubTasks() {
         return subTasksIds;
     }
 
-    public void setState(States state) {
+    public void setState(State state) {
         super.state = state;
     }
 
@@ -43,7 +45,10 @@ public class Epic extends Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(subTasksIds);
+        int hashCode = super.hashCode();
+        hashCode += 31 * hashCode + name.hashCode() + description.hashCode() +
+                id + state.hashCode() + subTasksIds.hashCode();
+        return hashCode;
     }
 
     @Override
