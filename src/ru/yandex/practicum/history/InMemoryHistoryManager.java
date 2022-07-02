@@ -1,13 +1,7 @@
 package ru.yandex.practicum.history;
 
-
 import ru.yandex.practicum.task.Task;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 /**
  * @author Vlad Osipov
  * @create 2022-05-09   19:08
@@ -42,8 +36,13 @@ public class InMemoryHistoryManager implements HistoryManager {
         return getTasks();
     }
 
-    public Node linkLast(Task task) {
-        Node oldTail = tail;
+    private Node linkLast(Task task) {
+        Node oldTail;
+        if(browsingHistoryTasks.size() == 0) {
+            oldTail = null;
+        } else {
+            oldTail = tail;
+        }
         Node newTail = new Node(oldTail, task, null);
         tail = newTail;
         if (oldTail == null) {
@@ -54,10 +53,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         return newTail;
     }
 
-    public void removeNode(Node node) {
+    private void removeNode(Node node) {
         if (head == node) {
             head = head.getNext();
-            head.setPrev(null);
+            if(head != null) {
+                head.setPrev(null);
+            }
         } else if (tail == node) {
             tail = tail.getPrev();
             tail.setNext(null);
@@ -67,7 +68,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    public List<Task> getTasks() {
+    private List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
         if (head != null) {
             Node currentNode = head;
@@ -78,5 +79,13 @@ public class InMemoryHistoryManager implements HistoryManager {
             tasks.add(currentNode.getData());
         }
         return tasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InMemoryHistoryManager that = (InMemoryHistoryManager) o;
+        return getHistory().equals(that.getHistory());
     }
 }

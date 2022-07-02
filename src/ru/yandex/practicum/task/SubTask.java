@@ -13,10 +13,15 @@ public class SubTask extends Task {
         this.epicId = epicId;
     }
 
+    public SubTask(Integer epicId, String name, String description, long durationMinutes, String startTime) {
+        super(name, description, durationMinutes, startTime);
+        this.epicId = epicId;
+    }
+
     public SubTask(String value) {
         super(value);
         String[] subTask = value.split(",");
-        this.epicId = Integer.parseInt(subTask[5]);
+        this.epicId = Integer.parseInt(subTask[7]);
 
     }
 
@@ -35,7 +40,7 @@ public class SubTask extends Task {
         if (this == o) return true;
         if (!(o instanceof SubTask)) return false;
         SubTask subTask = (SubTask) o;
-        return subTask.id == id && subTask.name.equals(name) && subTask.description.equals(description);
+        return subTask.name.equals(name) && subTask.description.equals(description);
     }
 
     @Override
@@ -48,6 +53,11 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return id + ",SUBTASK," + name + "," + state + "," + description + "," + epicId;
+        return id + "," +
+                startTime.toString() + ","
+                + getEndTime().toString() +
+                ",SUBTASK," + name +
+                "," + state + "," +
+                description + "," + epicId;
     }
 }

@@ -1,5 +1,6 @@
 package ru.yandex.practicum.service;
 
+import ru.yandex.practicum.history.HistoryManager;
 import ru.yandex.practicum.task.Epic;
 import ru.yandex.practicum.task.SubTask;
 import ru.yandex.practicum.task.Task;
@@ -12,43 +13,47 @@ import java.util.List;
  */
 public interface TaskManager {
 
-    List<Task> getListOfTasks();
+    List<Task> getTasks();
 
     void removeAllTasks();
 
-    Task getTaskById(int taskId);
+    Task getTask(int id);
 
     void addTask(Task newTask);
 
     void updateTask(Task updatedTask);
 
-    void removeTaskById(int taskId);
+    void removeTask(int id);
 
-    List<Epic> getListOfEpics();
+    List<Epic> getEpics();
 
     void removeAllEpics();
 
-    Epic getEpicById(int epicId);
+    Epic getEpic(int id);
 
     void addEpic(Epic newEpic);
 
     void updateEpic(Epic updatedEpic);
 
-    void removeEpicById(int epicId);
+    void removeEpic(int id);
 
     List<Integer> getSubTasksOfEpic(Epic epic);
 
-    List<SubTask> getListOfSubTasks();
+    List<SubTask> getSubTasks();
 
     void removeAllSubTasks();
 
-    SubTask getSubTaskById(int subTaskId);
+    SubTask getSubTask(int id);
 
     void addSubTask(SubTask newSubtask);
 
     void updateSubTask(SubTask updatedSubTask);
 
-    void removeSubTaskById(int subTaskId);
+    void removeSubTask(Integer id);
 
     List<Task> getHistory();
+
+    HistoryManager getHistoryManager();
+
+    List<Task> getPrioritizedTasks();
 }

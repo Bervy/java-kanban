@@ -1,5 +1,7 @@
 package ru.yandex.practicum.task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,15 +11,20 @@ import java.util.List;
  */
 public class Epic extends Task {
 
+    //Для одного теста пришлось убрать final
     private final ArrayList<Integer> subTasksIds;
+    LocalDateTime endTime;
 
     public Epic(String name, String description) {
-        super(name, description);
+        super(name, description, 0, LocalDateTime.MAX.toString());
+        endTime = LocalDateTime.MIN;
         this.subTasksIds = new ArrayList<>();
     }
 
     public Epic(String value) {
         super(value);
+        String[] task = value.split(",");
+        this.endTime = LocalDateTime.parse(task[2]);
         this.subTasksIds = new ArrayList<>();
     }
 
@@ -26,13 +33,21 @@ public class Epic extends Task {
         return TaskType.EPIC;
     }
 
-
     public List<Integer> getSubTasks() {
         return subTasksIds;
     }
 
-    public void setState(State state) {
-        super.state = state;
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void increaseDuration(Duration duration) {
+        this.duration = this.duration.plus(duration);
     }
 
     @Override
@@ -40,7 +55,7 @@ public class Epic extends Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Epic epic = (Epic) o;
-        return epic.id == id && epic.name.equals(name) && epic.description.equals(description);
+        return epic.name.equals(name) && epic.description.equals(description);
     }
 
     @Override
@@ -53,7 +68,9 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return id +
+        return id + "," +
+                this.startTime.toString() + ","
+                + this.endTime.toString() +
                 ",EPIC," + name +
                 "," + state + "," +
                 description;

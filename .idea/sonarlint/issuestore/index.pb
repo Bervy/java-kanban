@@ -1,35 +1,9 @@
 
-9
-	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
-?
-java-kanban.iml,d\f\df5dcbbd3f931c7c23855ccec11732ab4c8544f2
 w
 G.idea/sonarlint/issuestore/d/f/df5dcbbd3f931c7c23855ccec11732ab4c8544f2,c\c\cc1cc97682fc8c64ca34ddbfc67c56f94831fbf9
 w
 G.idea/sonarlint/issuestore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d,b\4\b4a0b63ce8560bbc5de0f9995c20cc861dc2adb3
 \
 ,.idea/inspectionProfiles/Project_Default.xml,4\9\496a238a6afa168dbaf6efd37bb459331589579c
->
-savedTasks.csv,b\a\ba4bcc02e1852c51c8dc3e315830a24c2058fc08
-V
-&src/ru/yandex/practicum/task/Epic.java,b\2\b219da25b4fbe069c84def2344a976bcb5f5d525
-c
-3src/ru/yandex/practicum/history/HistoryManager.java,f\d\fdff39af9d328f66365a3dc767c036f3972f06fe
-k
-;src/ru/yandex/practicum/history/InMemoryHistoryManager.java,8\0\80bddba95bfc803b0e7799dadc4e656a9a933c12
-l
-<src/ru/yandex/practicum/exceptions/ManagerLoadException.java,6\8\68bbdb696a912cc0c2fa0c79da7137f79a147aed
-l
-<src/ru/yandex/practicum/exceptions/ManagerSaveException.java,9\c\9cd7592102b9e826dc6577594954c62db2b859db
-W
-'src/ru/yandex/practicum/task/State.java,4\7\471578574deed856c7656f73920ec65f1c104417
-Y
-)src/ru/yandex/practicum/task/SubTask.java,e\7\e75508dde45d4cff733b91453117e956864c18c2
-V
-&src/ru/yandex/practicum/task/Task.java,5\1\51588eb67af38870e44cbfb4bcf1d949b35b175d
-Y
-)src/ru/yandex/practicum/history/Node.java,9\1\91cad59412569d2a3cb29beca3d5b96b410bb364
-`
-0src/ru/yandex/practicum/service/TaskManager.java,1\6\1616745498de792bc38543aeff7bae534968cf70
-Z
-*src/ru/yandex/practicum/task/TaskType.java,6\6\664410e4f932f5aa90d3606275766c16b5a6ed0e
+9
+	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d

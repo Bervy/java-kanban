@@ -15,18 +15,18 @@ import java.io.Writer;
  * @create 2022-06-13   12:20
  */
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    public static final String FILENAME = "savedTasks.csv";
+    public String fileName = "savedTasks.csv";
 
     private void save() {
-        try (Writer fileWriter = new FileWriter(FILENAME)) {
-            fileWriter.write("id,type,name,status,description,epic\n");
-            for (Task task : getListOfTasks()) {
+        try (Writer fileWriter = new FileWriter(fileName)) {
+            fileWriter.write("id,startTime,endTime,type,name,status,description,epic\n");
+            for (Task task : getTasks()) {
                 fileWriter.write(task.toString() + "\n");
             }
-            for (Epic epic : getListOfEpics()) {
+            for (Epic epic : getEpics()) {
                 fileWriter.write(epic.toString() + "\n");
             }
-            for (SubTask subTask : getListOfSubTasks()) {
+            for (SubTask subTask : getSubTasks()) {
                 fileWriter.write(subTask.toString() + "\n");
             }
             fileWriter.write("\n");
@@ -34,19 +34,29 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 fileWriter.write(task.getId() + ",");
             }
         } catch (IOException e) {
-            throw new ManagerSaveException("Не удалось сохранить в файл " + e.getMessage());
+            throw new ManagerSaveException("Can't save to file");
         }
     }
 
     public void addTasksFromFile(Task taskFromFile) {
-        if(taskFromFile.getTaskType() == TaskType.TASK) {
+        if (taskFromFile.getTaskType() == TaskType.TASK) {
             tasks.put(taskFromFile.getId(), taskFromFile);
-        } else if(taskFromFile.getTaskType() == TaskType.EPIC) {
+        } else if (taskFromFile.getTaskType() == TaskType.EPIC) {
             epics.put(taskFromFile.getId(), (Epic) taskFromFile);
         } else {
             subTasks.put(taskFromFile.getId(), (SubTask) taskFromFile);
+            SubTask subTask = (SubTask) taskFromFile;
+            epics.get(subTask.getEpicId()).getSubTasks().add(subTask.getId());
         }
-     }
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     @Override
     public void removeAllTasks() {
@@ -55,8 +65,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task getTaskById(int id) {
-        Task foundedTask = super.getTaskById(id);
+    public Task getTask(int id) {
+        Task foundedTask = super.getTask(id);
         if (foundedTask != null) {
             save();
             return foundedTask;
@@ -78,8 +88,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeTaskById(int id) {
-        super.removeTaskById(id);
+    public void removeTask(int id) {
+        super.removeTask(id);
         save();
     }
 
@@ -90,8 +100,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Epic getEpicById(int id) {
-        Epic foundedEpic = super.getEpicById(id);
+    public Epic getEpic(int id) {
+        Epic foundedEpic = super.getEpic(id);
         if (foundedEpic != null) {
             save();
             return foundedEpic;
@@ -113,8 +123,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeEpicById(int id) {
-        super.removeEpicById(id);
+    public void removeEpic(int id) {
+        super.removeEpic(id);
         save();
     }
 
@@ -137,19 +147,29 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeSubTaskById(int id) {
-        super.removeSubTaskById(id);
+    public void removeSubTask(Integer id) {
+        super.removeSubTask(id);
         save();
     }
 
     @Override
-    public SubTask getSubTaskById(int id) {
-        SubTask subTask = super.getSubTaskById(id);
+    public SubTask getSubTask(int id) {
+        SubTask subTask = super.getSubTask(id);
         if (subTask != null) {
             save();
             return subTask;
         } else {
             return null;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FileBackedTasksManager that = (FileBackedTasksManager) o;
+        return tasks.equals(that.tasks) && epics.equals(that.epics)
+                && subTasks.equals(that.subTasks)
+                && historyManager.equals(that.historyManager);
     }
 }
