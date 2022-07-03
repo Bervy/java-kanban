@@ -516,4 +516,63 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals("Fail to updateSubTask because " + updatedSubTask.getName() + " overlap " + overlapSubTask.getName(), exception.getMessage(), "Exception not thrown");
         assertNotEquals(expectedTimeOfTask, updatedSubTask.getStartTime(), "StartTime of subTasks not equal");
     }
+
+    @Test
+    void shouldRemoveLastSubTaskOfEpic() {
+        SubTask subTask = new SubTask(5, "TestSubTask", "TestSubTask", 30, "2022-08-26T09:00:00");
+        taskManager.addSubTask(subTask);
+        taskManager.removeSubTask(10);
+        Epic epic = taskManager.getEpic(5);
+        LocalDateTime expectedStartTimeOfEpic = LocalDateTime.MAX;
+        LocalDateTime expectedEndTimeOfEpic = LocalDateTime.MIN;
+        assertEquals(expectedStartTimeOfEpic, epic.getStartTime(), "StartTime not equal");
+        assertEquals(expectedEndTimeOfEpic, epic.getEndTime(), "EndTime not equal");
+    }
+
+    @Test
+    void removedSubTaskStartTimeAndEndTimeNotEqualTOEpicsTime() {
+        SubTask subTask1 = new SubTask(5, "TestSubTask1", "TestSubTask1", 30, "2022-08-26T09:00:00");
+        SubTask subTask2 = new SubTask(5, "TestSubTask2", "TestSubTask2", 30, "2022-08-26T10:00:00");
+        SubTask subTask3 = new SubTask(5, "TestSubTask3", "TestSubTask3", 30, "2022-08-26T12:00:00");
+
+        taskManager.addSubTask(subTask1);
+        taskManager.addSubTask(subTask2);
+        taskManager.addSubTask(subTask3);
+        taskManager.removeSubTask(11);
+        Epic epic = taskManager.getEpic(5);
+        LocalDateTime expectedStartTimeOfEpic = subTask1.getStartTime();
+        LocalDateTime expectedEndTimeOfEpic = subTask3.getEndTime();
+        assertEquals(expectedStartTimeOfEpic, epic.getStartTime(), "StartTime not equal");
+        assertEquals(expectedEndTimeOfEpic, epic.getEndTime(), "EndTime not equal");
+    }
+
+    @Test
+    void shouldNotAddSubTaskIfExists() {
+        SubTask testSubTask = new SubTask(3, "SubTask1", "SubTask1", 30, "2022-08-30T09:00:00");
+        taskManager.addSubTask(testSubTask);
+        SubTask expectedSubTask = taskManager.getSubTask(10);
+        assertNull(expectedSubTask, "Subtask found");
+    }
+
+    @Test
+    void shouldReturnEmptyListIfEpicNotExists() {
+        Epic testEpic = new Epic("TestEpic", "TestEpic");
+        List<Integer> subTasksOfEpic = taskManager.getSubTasksOfEpic(testEpic);
+        int expectedSize = 0;
+        assertEquals(expectedSize, subTasksOfEpic.size());
+    }
+
+    @Test
+    void endTimeOfTaskIfNoStartTimeEqualsMin() {
+        Task testTask = new Task("testTask", "testTask");
+        LocalDateTime expectedEndTime = LocalDateTime.MIN;
+        assertEquals(expectedEndTime, testTask.getEndTime());
+    }
+
+    @Test
+    void endTimeOfSubTaskIfNoStartTimeEqualsMin() {
+        SubTask testSubTask = new SubTask(3, "testSubTask", "testSubTask");
+        LocalDateTime expectedEndTime = LocalDateTime.MIN;
+        assertEquals(expectedEndTime, testSubTask.getEndTime());
+    }
 }
