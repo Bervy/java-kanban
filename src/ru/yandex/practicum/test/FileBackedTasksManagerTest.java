@@ -11,12 +11,14 @@ import ru.yandex.practicum.service.TaskManager;
 import ru.yandex.practicum.task.Epic;
 import ru.yandex.practicum.task.SubTask;
 import ru.yandex.practicum.task.Task;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Vlad Osipov
@@ -37,7 +39,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         fileBackedTaskManager = (FileBackedTasksManager) Managers.getFileBacked();
         String fileName = fileBackedTaskManager.getFileName();
         file = new File(fileName);
-        try(Writer fileWriter = new FileWriter(fileName)) {
+        try (Writer fileWriter = new FileWriter(fileName)) {
             fileWriter.write(" ");
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,7 +60,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     @Test
     void testSaveAndLoadWitEpicsWithoutSubtasks() {
         Task task1 = new Task("Task1", "Task1", 30, "2022-08-30T12:00:00");
-        Task task2 = new Task("Task2", "Task2", 30, "2022-08-30T12:00:00");
+        Task task2 = new Task("Task2", "Task2", 30, "2022-08-28T12:00:00");
         Epic epic1 = new Epic("Epic1", "Epic1");
 
         fileBackedTaskManager.addTask(task1);
@@ -75,7 +77,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     @Test
     void testSaveAndLoadWithEmptyListOfHistory() {
         Task task1 = new Task("Task1", "Task1", 30, "2022-08-30T12:00:00");
-        Task task2 = new Task("Task2", "Task2", 30, "2022-08-30T12:00:00");
+        Task task2 = new Task("Task2", "Task2", 30, "2022-08-28T12:00:00");
         Epic epic1 = new Epic("Epic1", "Epic1");
 
         fileBackedTaskManager.addTask(task1);
@@ -113,9 +115,9 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
     @Test
     void shouldNotLoadFromFile() {
-        File failFile  = new File("fail.csv");
+        File failFile = new File("fail.csv");
         Task task1 = new Task("Task1", "Task1", 30, "2022-08-30T12:00:00");
-        Task task2 = new Task("Task2", "Task2", 30, "2022-08-30T12:00:00");
+        Task task2 = new Task("Task2", "Task2", 30, "2022-08-28T12:00:00");
         Epic epic1 = new Epic("Epic1", "Epic1");
 
         fileBackedTaskManager.addTask(task1);
