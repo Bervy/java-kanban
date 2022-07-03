@@ -275,14 +275,13 @@ public class InMemoryTaskManager implements TaskManager {
                 if (subtasksOfEpic.isEmpty()) {
                     foundedEpic.setStartTime(LocalDateTime.MAX);
                     foundedEpic.setEndTime(LocalDateTime.MIN);
+                    setStatusEpic(foundedEpic);
                 } else {
                     if (isEqualSubtasksTimeToEpicsTime(removedSubTask, foundedEpic)) {
                         foundedEpic.subtractionDuration(removedSubTask.getDuration());
                         findNewTimeAndEndTimeOfEpic(foundedEpic);
+                        setStatusEpic(foundedEpic);
                     } else {
-                        SubTask firstSubtaskOfEpic = subTasks.get(subtasksOfEpic.get(0));
-                        foundedEpic.setStartTime(firstSubtaskOfEpic.getStartTime());
-                        foundedEpic.setEndTime(firstSubtaskOfEpic.getEndTime());
                         setStatusEpic(foundedEpic);
                     }
                 }
