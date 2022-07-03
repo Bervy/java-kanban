@@ -12,8 +12,8 @@ import java.util.List;
 public class Epic extends Task {
 
     //Для одного теста пришлось убрать final
-    private final ArrayList<Integer> subTasksIds;
-    LocalDateTime endTime;
+    private final List<Integer> subTasksIds;
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description, 0, LocalDateTime.MAX.toString());
@@ -23,8 +23,11 @@ public class Epic extends Task {
 
     public Epic(String value) {
         super(value);
-        String[] task = value.split(",");
-        this.endTime = LocalDateTime.parse(task[2]);
+        if (startTime.isEqual(LocalDateTime.MAX)) {
+            this.endTime = LocalDateTime.MIN;
+        } else {
+            this.endTime = this.startTime.plus(duration);
+        }
         this.subTasksIds = new ArrayList<>();
     }
 
@@ -50,6 +53,14 @@ public class Epic extends Task {
         this.duration = this.duration.plus(duration);
     }
 
+    public void subtractionDuration(Duration duration) {
+        if(this.duration.minus(duration).isNegative()) {
+            this.duration = Duration.ZERO;
+        } else {
+            this.duration = this.duration.minus(duration);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,7 +81,7 @@ public class Epic extends Task {
     public String toString() {
         return id + "," +
                 this.startTime.toString() + ","
-                + this.endTime.toString() +
+                + duration +
                 ",EPIC," + name +
                 "," + state + "," +
                 description;
