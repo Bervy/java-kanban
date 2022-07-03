@@ -54,11 +54,7 @@ public class Epic extends Task {
     }
 
     public void subtractionDuration(Duration duration) {
-        if(this.duration.minus(duration).isNegative()) {
-            this.duration = Duration.ZERO;
-        } else {
-            this.duration = this.duration.minus(duration);
-        }
+        this.duration = this.duration.minus(duration);
     }
 
     @Override
