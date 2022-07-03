@@ -55,7 +55,7 @@ public class SubTask extends Task {
     public String toString() {
         return id + "," +
                 startTime.toString() + ","
-                + getEndTime().toString() +
+                + duration +
                 ",SUBTASK," + name +
                 "," + state + "," +
                 description + "," + epicId;
