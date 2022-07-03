@@ -1,10 +1,10 @@
 package ru.yandex.practicum.service;
 
 import ru.yandex.practicum.exceptions.ManagerSaveException;
-import ru.yandex.practicum.task.TaskType;
 import ru.yandex.practicum.task.Epic;
 import ru.yandex.practicum.task.SubTask;
 import ru.yandex.practicum.task.Task;
+import ru.yandex.practicum.task.TaskType;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private void save() {
         try (Writer fileWriter = new FileWriter(fileName)) {
-            fileWriter.write("id,startTime,endTime,type,name,status,description,epic\n");
+            fileWriter.write("id,startTime,duration,type,name,status,description,epic\n");
             for (Task task : getTasks()) {
                 fileWriter.write(task.toString() + "\n");
             }
