@@ -1,10 +1,10 @@
 package ru.yandex.practicum.service;
 
 import ru.yandex.practicum.exceptions.ManagerLoadException;
-import ru.yandex.practicum.task.TaskType;
 import ru.yandex.practicum.task.Epic;
 import ru.yandex.practicum.task.SubTask;
 import ru.yandex.practicum.task.Task;
+import ru.yandex.practicum.task.TaskType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,7 +31,7 @@ public class FileLoader {
                     tasksFromString(taskLine, fileBackedTasksManager);
                 } else {
                     String historyLine = bufferedReader.readLine();
-                    if(historyLine != null) {
+                    if (historyLine != null) {
                         historyFromString(historyLine, fileBackedTasksManager);
                     }
                 }
@@ -44,7 +44,7 @@ public class FileLoader {
 
     private static void tasksFromString(String taskLine, FileBackedTasksManager fileBackedTasksManager) {
         String[] taskFields = taskLine.split(",");
-        try{
+        try {
             TaskType taskType = TaskType.valueOf(taskFields[3]);
             switch (taskType) {
                 case TASK -> {
