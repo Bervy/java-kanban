@@ -2,6 +2,7 @@ package ru.yandex.practicum.test;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.exceptions.TaskOverlapAnotherTaskException;
 import ru.yandex.practicum.service.TaskManager;
 import ru.yandex.practicum.task.Epic;
 import ru.yandex.practicum.task.State;
@@ -13,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Vlad Osipov
@@ -30,23 +30,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager = createTaskManager();
         emptyTaskManager = createTaskManager();
 
-        Task task1 = new Task("Task1", "Task1"
-                , 30, "2022-08-30T06:00:00");
-        Task task2 = new Task("Task2", "Task2"
-                , 30, "2022-08-30T14:00:00");
+        Task task1 = new Task("Task1", "Task1", 30, "2022-08-30T06:00:00");
+        Task task2 = new Task("Task2", "Task2", 30, "2022-08-30T14:00:00");
 
         Epic epic1 = new Epic("Epic1", "Epic1");
         Epic epic2 = new Epic("Epic2", "Epic2");
         Epic epic3 = new Epic("Epic3", "Epic3");
 
-        SubTask subTask1 = new SubTask(3, "SubTask1", "SubTask1"
-                , 30, "2022-08-30T09:00:00");
-        SubTask subTask2 = new SubTask(3, "SubTask2", "SubTask2"
-                , 30, "2022-08-30T10:00:00");
-        SubTask subTask3 = new SubTask(4, "SubTask3", "SubTask3"
-                , 30, "2022-08-30T09:00:00");
-        SubTask subTask4 = new SubTask(4, "SubTask4", "SubTask4"
-                , 30, "2022-08-30T12:00:00");
+        SubTask subTask1 = new SubTask(3, "SubTask1", "SubTask1", 30, "2022-08-30T09:00:00");
+        SubTask subTask2 = new SubTask(3, "SubTask2", "SubTask2", 30, "2022-08-30T10:00:00");
+        SubTask subTask3 = new SubTask(4, "SubTask3", "SubTask3", 30, "2022-08-29T09:00:00");
+        SubTask subTask4 = new SubTask(4, "SubTask4", "SubTask4", 30, "2022-08-28T12:00:00");
 
         taskManager.addTask(task1);
         taskManager.addTask(task2);
@@ -104,10 +98,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldAddNewTask() {
-        Task expectedTask = new Task("Test Task", "Test Task"
-                , 30, "2022-08-31T12:00:00");
+        Task expectedTask = new Task("Test Task", "Test Task", 30, "2022-08-31T12:00:00");
         taskManager.addTask(expectedTask);
-        Task testedTask = taskManager.getTask(9);
+        Task testedTask = taskManager.getTask(10);
         assertNotNull(testedTask, "Task not found");
         assertEquals(expectedTask, testedTask, "Tasks not equal");
     }
@@ -123,8 +116,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldUpdateTask() {
-        Task expectedTask = new Task("Updated Task", "Updated Task",
-                30, "2022-08-30T12:00:00");
+        Task expectedTask = new Task("Updated Task", "Updated Task", 30, "2022-08-30T12:00:00");
         expectedTask.setId(1);
         taskManager.updateTask(expectedTask);
         Task testedTask = taskManager.getTask(1);
@@ -202,7 +194,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void shouldAddNewEpic() {
         Epic expectedEpic = new Epic("Test Epic", "Test Epic");
         taskManager.addEpic(expectedEpic);
-        Epic testedEpic = taskManager.getEpic(9);
+        Epic testedEpic = taskManager.getEpic(10);
         assertNotNull(testedEpic, "Epic not found");
         assertEquals(expectedEpic, testedEpic, "Epics not equal");
     }
@@ -272,7 +264,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void shouldReturnListOfSubtasksWithSize4() {
         List<SubTask> testedListOfSubtasks = taskManager.getSubTasks();
-        int expectedSize = 3;
+        int expectedSize = 4;
         SubTask expectedSubtask = taskManager.getSubTask(6);
         assertNotNull(testedListOfSubtasks, "Subtasks don't return");
         assertEquals(expectedSize, testedListOfSubtasks.size(), "Wrong subtasks size");
@@ -290,7 +282,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void shouldRemoveAllSubtasks() {
         List<SubTask> beforeRemoveListOfSubtasks = taskManager.getSubTasks();
-        int beforeRemoveExpectedSize = 3;
+        int beforeRemoveExpectedSize = 4;
         int afterRemoveExpectedSize = 0;
         taskManager.removeAllSubTasks();
         List<SubTask> afterRemoveListOfSubtasks = taskManager.getSubTasks();
@@ -314,10 +306,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldAddNewSubtask() {
-        SubTask expectedSubtask = new SubTask(3, "Test Subtask", "Test Subtask"
-                , 30, "2022-08-30T07:00:00");
+        SubTask expectedSubtask = new SubTask(3, "Test Subtask", "Test Subtask", 30, "2022-08-30T07:00:00");
         taskManager.addSubTask(expectedSubtask);
-        SubTask testedSubtask = taskManager.getSubTask(9);
+        SubTask testedSubtask = taskManager.getSubTask(10);
         assertNotNull(testedSubtask, "Subtask not found");
         assertEquals(expectedSubtask, testedSubtask, "Subtask not equal");
     }
@@ -325,17 +316,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void shouldUpdateStartTimeOfEpicAfterAddNewSubtask() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        SubTask expectedSubtask = new SubTask(3, "Test Subtask", "Test Subtask"
-                , 300, "2022-08-29T10:00:00");
+        SubTask expectedSubtask = new SubTask(3, "Test Subtask", "Test Subtask", 300, "2022-08-29T10:00:00");
         taskManager.addSubTask(expectedSubtask);
-        assertEquals(expectedSubtask.getStartTime().format(dateTimeFormatter),
-                taskManager.getEpic(3).getStartTime().format(dateTimeFormatter), "Start time of epic don't update");
+        assertEquals(expectedSubtask.getStartTime().format(dateTimeFormatter), taskManager.getEpic(3).getStartTime().format(dateTimeFormatter), "Start time of epic don't update");
     }
 
     @Test
     void shouldUpdateSubtask() {
-        SubTask expectedSubtask = new SubTask(3, "Updated Subtask", "Updated Subtask"
-                , 30, "2022-08-30T07:00:00");
+        SubTask expectedSubtask = new SubTask(3, "Updated Subtask", "Updated Subtask", 30, "2022-08-30T07:00:00");
         expectedSubtask.setId(6);
         taskManager.updateSubTask(expectedSubtask);
         SubTask testedSubtask = taskManager.getSubTask(6);
@@ -346,13 +334,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void shouldUpdateStartTimeOfEpicAfterUpdateSubtask() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        SubTask expectedSubtask = new SubTask(3, "Test Subtask", "Test Subtask"
-                , 30, "2022-08-30T08:00:00");
+        SubTask expectedSubtask = new SubTask(3, "Test Subtask", "Test Subtask", 30, "2022-08-30T08:00:00");
         expectedSubtask.setId(6);
         taskManager.updateSubTask(expectedSubtask);
-        assertEquals(expectedSubtask.getStartTime().format(dateTimeFormatter),
-                taskManager.getEpic(3).getStartTime().format(dateTimeFormatter),
-                "Start time of epic don't update");
+        assertEquals(expectedSubtask.getStartTime().format(dateTimeFormatter), taskManager.getEpic(3).getStartTime().format(dateTimeFormatter), "Start time of epic don't update");
     }
 
     @Test
@@ -366,11 +351,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldNotUpdateSubtaskWithWrongIdInSubTasksOfEpic() {
-        SubTask expectedSubtask = new SubTask(3, "Updated Subtask", "Updated Subtask"
-                , 30, "2022-08-30T07:00:00");
+        SubTask expectedSubtask = new SubTask(3, "Updated Subtask", "Updated Subtask", 30, "2022-08-30T07:00:00");
         expectedSubtask.setId(6);
         Epic testEpic = taskManager.getEpic(3);
-        testEpic.getSubTasks().set(0,20);
+        testEpic.getSubTasks().set(0, 20);
         taskManager.updateSubTask(expectedSubtask);
         SubTask testedSubtask = taskManager.getSubTask(6);
         assertNotNull(testedSubtask, "Subtask not found");
@@ -388,13 +372,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void shouldUpdateStartTimeOfEpicAfterRemoveSubtask() {
         SubTask removedSubtask = taskManager.getSubTask(6);
         SubTask expectedSubtask = taskManager.getSubTask(7);
-        assertEquals(removedSubtask.getStartTime(),
-                taskManager.getEpic(3).getStartTime(),
-                "Start time of epic don't update");
+        assertEquals(removedSubtask.getStartTime(), taskManager.getEpic(3).getStartTime(), "Start time of epic don't update");
         taskManager.removeSubTask(6);
-        assertEquals(expectedSubtask.getStartTime(),
-                taskManager.getEpic(3).getStartTime(),
-                "Start time of epic don't update");
+        assertEquals(expectedSubtask.getStartTime(), taskManager.getEpic(3).getStartTime(), "Start time of epic don't update");
     }
 
     @Test
@@ -478,31 +458,62 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void shouldReturnPrioritizedTasksByStartTimeAfterAddNewTask() {
         List<Task> beforeAddNewTaskSortByPriorityTasks = taskManager.getPrioritizedTasks();
-        int beforeAddNewTaskSize = 5;
-        Task beforeAddNewTask = taskManager.getTask(1);
+        int beforeAddNewTaskSize = 6;
+        SubTask beforeAddNewTask = taskManager.getSubTask(9);
         Task beforeAddNewTaskFirstTask = beforeAddNewTaskSortByPriorityTasks.get(0);
         assertEquals(beforeAddNewTaskSize, beforeAddNewTaskSortByPriorityTasks.size(), "Size not equal");
         assertEquals(beforeAddNewTask, beforeAddNewTaskFirstTask, "Task not equal");
-        Task expectedTask = new Task("Test Task", "Test Task"
-                , 30, "2022-08-27T12:00:00");
+        Task expectedTask = new Task("Test Task", "Test Task", 30, "2022-08-27T12:00:00");
         taskManager.addTask(expectedTask);
         List<Task> afterAddNewTaskSortByPriorityTasks = taskManager.getPrioritizedTasks();
-        Task afterAddNewTask = taskManager.getTask(9);
+        Task afterAddNewTask = taskManager.getTask(10);
         Task afterAddNewTaskFirstTask = afterAddNewTaskSortByPriorityTasks.get(0);
-        int afterAddNewTaskSize = 6;
+        int afterAddNewTaskSize = 7;
         assertEquals(afterAddNewTaskSize, afterAddNewTaskSortByPriorityTasks.size(), "Size not equal");
         assertEquals(afterAddNewTask, afterAddNewTaskFirstTask, "Task not equal");
     }
 
     @Test
-    void shouldNotUpdateTaskOverlapByTimeAfterUpdateTask() {
+    void shouldNotAddTaskOverlapByTime() {
+        Task task = new Task("TestTask", "TestTask", 30, "2022-08-30T06:00:00");
+        Task overlapSubTask = taskManager.getTask(1);
+        Exception exception = assertThrows(TaskOverlapAnotherTaskException.class, () -> taskManager.addTask(task));
+        assertEquals("Fail to addTask because " + task.getName() + " overlap " + overlapSubTask.getName(), exception.getMessage(), "Exception not thrown");
+    }
+
+    @Test
+    void shouldNotUpdateTaskOverlapByTime() {
         LocalDateTime expectedTimeOfTask = LocalDateTime.parse("2022-08-30T06:00:00");
         Task beforeUpdateTask = taskManager.getTask(1);
         assertEquals(expectedTimeOfTask, beforeUpdateTask.getStartTime(), "StartTime of task not equal");
-        Task updatedTask = new Task("Task1", "Task1"
-                , 30, "2022-08-30T09:00:00");
+        Task updatedTask = new Task("Task1", "Task1", 30, "2022-08-30T09:00:00");
         updatedTask.setId(1);
-        taskManager.updateTask(updatedTask);
+        SubTask overlapSubTask = taskManager.getSubTask(6);
+
+        Exception exception = assertThrows(TaskOverlapAnotherTaskException.class, () -> taskManager.updateTask(updatedTask));
+        assertEquals("Fail to updateTask because " + updatedTask.getName() + " overlap " + overlapSubTask.getName(), exception.getMessage(), "Exception not thrown");
         assertNotEquals(expectedTimeOfTask, updatedTask.getStartTime(), "StartTime of task not equal");
+    }
+
+    @Test
+    void shouldNotAddSubTaskOverlapByTime() {
+        SubTask subTask = new SubTask(3, "TestTask", "TestTask", 30, "2022-08-30T06:00:00");
+        Task overlapSubTask = taskManager.getTask(1);
+        Exception exception = assertThrows(TaskOverlapAnotherTaskException.class, () -> taskManager.addSubTask(subTask));
+        assertEquals("Fail to addSubTask because " + subTask.getName() + " overlap " + overlapSubTask.getName(), exception.getMessage(), "Exception not thrown");
+    }
+
+    @Test
+    void shouldNotUpdateSubTaskOverlapByTime() {
+        LocalDateTime expectedTimeOfTask = LocalDateTime.parse("2022-08-30T10:00:00");
+        SubTask beforeUpdateSubTask = taskManager.getSubTask(7);
+        assertEquals(expectedTimeOfTask, beforeUpdateSubTask.getStartTime(), "StartTime of subTasks not equal");
+        SubTask updatedSubTask = new SubTask(3, "SubTask2", "SubTask2", 30, "2022-08-30T09:00:00");
+        updatedSubTask.setId(7);
+        SubTask overlapSubTask = taskManager.getSubTask(6);
+
+        Exception exception = assertThrows(TaskOverlapAnotherTaskException.class, () -> taskManager.updateSubTask(updatedSubTask));
+        assertEquals("Fail to updateSubTask because " + updatedSubTask.getName() + " overlap " + overlapSubTask.getName(), exception.getMessage(), "Exception not thrown");
+        assertNotEquals(expectedTimeOfTask, updatedSubTask.getStartTime(), "StartTime of subTasks not equal");
     }
 }
