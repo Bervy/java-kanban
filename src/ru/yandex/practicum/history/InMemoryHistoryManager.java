@@ -1,7 +1,12 @@
 package ru.yandex.practicum.history;
 
 import ru.yandex.practicum.task.Task;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Vlad Osipov
  * @create 2022-05-09   19:08
@@ -38,7 +43,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private Node linkLast(Task task) {
         Node oldTail;
-        if(browsingHistoryTasks.size() == 0) {
+        if (browsingHistoryTasks.size() == 0) {
             oldTail = null;
         } else {
             oldTail = tail;
@@ -56,7 +61,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private void removeNode(Node node) {
         if (head == node) {
             head = head.getNext();
-            if(head != null) {
+            if (head != null) {
                 head.setPrev(null);
             }
         } else if (tail == node) {
