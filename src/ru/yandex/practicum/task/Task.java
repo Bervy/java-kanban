@@ -7,14 +7,14 @@ import java.time.LocalDateTime;
  * @author Vlad Osipov
  * @create 2022-04-23   10:01
  */
-public class Task implements Comparable<Task> {
+public class Task {
 
     protected String name;
     protected String description;
     protected int id;
     protected State state;
-    Duration duration;
-    LocalDateTime startTime;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.name = name;
@@ -38,7 +38,7 @@ public class Task implements Comparable<Task> {
         String[] task = value.split(",");
         this.id = Integer.parseInt(task[0]);
         this.startTime = LocalDateTime.parse(task[1]);
-        this.duration = Duration.between(startTime, LocalDateTime.parse(task[2]));
+        this.duration = Duration.parse(task[2]);
         this.name = task[4];
         this.state = State.valueOf(task[5]);
         this.description = task[6];
@@ -82,7 +82,7 @@ public class Task implements Comparable<Task> {
     }
 
     public LocalDateTime getEndTime() {
-        if(startTime.isEqual(LocalDateTime.MAX)) {
+        if (startTime.isEqual(LocalDateTime.MAX)) {
             return LocalDateTime.MIN;
         } else {
             return startTime.plus(duration);
@@ -126,20 +126,8 @@ public class Task implements Comparable<Task> {
     public String toString() {
         return id + "," +
                 startTime.toString() + ","
-                + getEndTime().toString() +
+                + duration +
                 ",TASK," + name + "," + state +
                 "," + description;
-    }
-
-    @Override
-    public int compareTo(Task task) {
-        if (this.equals(task)) {
-            return 0;
-        }
-        if (this.startTime.isAfter(task.getStartTime())) {
-            return 1;
-        } else {
-            return -1;
-        }
     }
 }
