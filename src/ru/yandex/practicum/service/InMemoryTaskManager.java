@@ -137,11 +137,11 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeEpic(int id) {
         HashMap<Integer, SubTask> copySubTasks = new HashMap<>(subTasks);
         if (epics.get(id) != null) {
-            for (Integer subTaskId : epics.get(id).getSubTasks()) {
-                for (SubTask subTask1 : copySubTasks.values()) {
-                    if (subTaskId == subTask1.getId()) {
-                        historyManager.remove(subTask1.getId());
-                        subTasks.remove(subTask1.getId());
+            for (Integer epicSubTaskId : epics.get(id).getSubTasks()) {
+                for (SubTask subTask : copySubTasks.values()) {
+                    if (epicSubTaskId == subTask.getId()) {
+                        historyManager.remove(subTask.getId());
+                        subTasks.remove(subTask.getId());
                     }
                 }
             }
@@ -192,9 +192,8 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Integer> getSubTasksOfEpic(Epic epic) {
         if (epics.containsKey(epic.getId())) {
             return epic.getSubTasks();
-        } else {
-            return Collections.emptyList();
         }
+        return Collections.emptyList();
     }
 
     @Override
