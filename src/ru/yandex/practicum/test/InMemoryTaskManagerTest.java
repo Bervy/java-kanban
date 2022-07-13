@@ -11,6 +11,6 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Override
     InMemoryTaskManager createTaskManager() {
-        return (InMemoryTaskManager) Managers.getFileBacked();
+        return (InMemoryTaskManager) Managers.getInMemory();
     }
 }

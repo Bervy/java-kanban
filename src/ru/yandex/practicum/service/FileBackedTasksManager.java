@@ -15,9 +15,9 @@ import java.io.Writer;
  * @create 2022-06-13   12:20
  */
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    public String fileName = "savedTasks.csv";
+    private String fileName = "savedTasks.csv";
 
-    private void save() {
+    protected void save() {
         try (Writer fileWriter = new FileWriter(fileName)) {
             fileWriter.write("id,startTime,duration,type,name,status,description,epic\n");
             for (Task task : getTasks()) {
@@ -76,21 +76,30 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addTask(Task newTask) {
-        super.addTask(newTask);
-        save();
+    public boolean addTask(Task newTask) {
+        if (super.addTask(newTask)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void updateTask(Task updatedTask) {
-        super.updateTask(updatedTask);
-        save();
+    public boolean updateTask(Task updatedTask) {
+        if (super.updateTask(updatedTask)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void removeTask(int id) {
-        super.removeTask(id);
-        save();
+    public boolean removeTask(int id) {
+        if (super.removeTask(id)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -111,21 +120,30 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addEpic(Epic newEpic) {
-        super.addEpic(newEpic);
-        save();
+    public boolean addEpic(Epic newEpic) {
+        if (super.addEpic(newEpic)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void updateEpic(Epic updatedEpic) {
-        super.updateEpic(updatedEpic);
-        save();
+    public boolean updateEpic(Epic updatedEpic) {
+        if (super.updateEpic(updatedEpic)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void removeEpic(int id) {
-        super.removeEpic(id);
-        save();
+    public boolean removeEpic(int id) {
+        if (super.removeEpic(id)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -135,21 +153,30 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addSubTask(SubTask newSubtask) {
-        super.addSubTask(newSubtask);
-        save();
+    public boolean addSubTask(SubTask newSubtask) {
+        if (super.addSubTask(newSubtask)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void updateSubTask(SubTask updatedSubTask) {
-        super.updateSubTask(updatedSubTask);
-        save();
+    public boolean updateSubTask(SubTask updatedSubTask) {
+        if (super.updateSubTask(updatedSubTask)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void removeSubTask(Integer id) {
-        super.removeSubTask(id);
-        save();
+    public boolean removeSubTask(Integer id) {
+        if (super.removeSubTask(id)) {
+            save();
+            return true;
+        }
+        return false;
     }
 
     @Override

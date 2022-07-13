@@ -7,6 +7,7 @@ import ru.yandex.practicum.task.State;
 import ru.yandex.practicum.task.SubTask;
 import ru.yandex.practicum.task.Task;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -58,34 +59,38 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addTask(Task newTask) {
-        if (newTask == null || tasks.containsValue(newTask)
+    public boolean addTask(Task newTask) {
+        if (newTask == null || tasks.containsKey(newTask.getId())
                 || isTaskOverlapTasksByTime(newTask, "addTask")) {
-            return;
+            return false;
         }
         tasks.put(++generatorId, newTask);
         newTask.setId(generatorId);
         tasksSortedByStartTime.add(newTask);
-
+        return true;
     }
 
     @Override
-    public void updateTask(Task updatedTask) {
+    public boolean updateTask(Task updatedTask) {
         if (updatedTask != null && tasks.containsKey(updatedTask.getId()) &&
                 !isTaskOverlapTasksByTime(updatedTask, "updateTask")) {
             tasks.put(updatedTask.getId(), updatedTask);
             tasksSortedByStartTime.remove(updatedTask);
             tasksSortedByStartTime.add(updatedTask);
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void removeTask(int id) {
+    public boolean removeTask(int id) {
         if (tasks.containsKey(id)) {
             historyManager.remove(id);
             tasksSortedByStartTime.remove(tasks.get(id));
             tasks.remove(id);
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -118,23 +123,26 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addEpic(Epic newEpic) {
-        if (newEpic == null || epics.containsValue(newEpic)) {
-            return;
+    public boolean addEpic(Epic newEpic) {
+        if (newEpic == null || epics.containsKey(newEpic.getId())) {
+            return false;
         }
         epics.put(++generatorId, newEpic);
         newEpic.setId(generatorId);
+        return true;
     }
 
     @Override
-    public void updateEpic(Epic updatedEpic) {
-        if (updatedEpic != null && epics.containsKey(updatedEpic.getId())) {
+    public boolean updateEpic(Epic updatedEpic) {
+        if (updatedEpic != null && epics.containsKey(updatedEpic.getId()) && !epics.get(updatedEpic.getId()).equals(updatedEpic)) {
             epics.put(updatedEpic.getId(), updatedEpic);
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void removeEpic(int id) {
+    public boolean removeEpic(int id) {
         HashMap<Integer, SubTask> copySubTasks = new HashMap<>(subTasks);
         if (epics.get(id) != null) {
             for (Integer epicSubTaskId : epics.get(id).getSubTasks()) {
@@ -147,7 +155,9 @@ public class InMemoryTaskManager implements TaskManager {
             }
             historyManager.remove(id);
             epics.remove(id);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -210,7 +220,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTasks.clear();
         for (Epic epic : epics.values()) {
             epic.getSubTasks().clear();
-            epic.setDuration(0);
+            epic.setDuration(Duration.parse("PT0M"));
         }
     }
 
@@ -226,21 +236,25 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addSubTask(SubTask newSubtask) {
-        if (newSubtask == null || subTasks.containsValue(newSubtask) ||
+    public boolean addSubTask(SubTask newSubtask) {
+        if (newSubtask == null || subTasks.containsKey(newSubtask.getId()) ||
                 isTaskOverlapTasksByTime(newSubtask, "addSubTask")) {
-            return;
+            return false;
+        }
+        Epic foundedEpic = epics.get(newSubtask.getEpicId());
+        if (foundedEpic == null) {
+            return false;
         }
         subTasks.put(++generatorId, newSubtask);
         newSubtask.setId(generatorId);
         tasksSortedByStartTime.add(newSubtask);
-        Epic foundedEpic = epics.get(newSubtask.getEpicId());
         foundedEpic.getSubTasks().add(newSubtask.getId());
         setDurationStartTimeAndEndTimeOfEpic(foundedEpic, newSubtask);
+        return true;
     }
 
     @Override
-    public void updateSubTask(SubTask updatedSubTask) {
+    public boolean updateSubTask(SubTask updatedSubTask) {
         if (updatedSubTask != null && subTasks.containsKey(updatedSubTask.getId()) &&
                 !isTaskOverlapTasksByTime(updatedSubTask, "updateSubTask")) {
             Epic foundedEpic = getEpicBySubTask(updatedSubTask);
@@ -252,12 +266,14 @@ public class InMemoryTaskManager implements TaskManager {
                 setStatusEpic(foundedEpic);
                 tasksSortedByStartTime.remove(updatedSubTask);
                 tasksSortedByStartTime.add(updatedSubTask);
+                return true;
             }
         }
+        return false;
     }
 
     @Override
-    public void removeSubTask(Integer id) {
+    public boolean removeSubTask(Integer id) {
         SubTask removedSubTask = subTasks.remove(id);
         if (removedSubTask != null) {
             tasksSortedByStartTime.remove(removedSubTask);
@@ -276,8 +292,10 @@ public class InMemoryTaskManager implements TaskManager {
                     }
                 }
                 setStatusEpic(foundedEpic);
+                return true;
             }
         }
+        return false;
     }
 
     @Override
@@ -330,9 +348,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     public boolean isTaskOverlapTasksByTime(Task checkedTask, String methodName) {
         for (Task task : tasksSortedByStartTime) {
-            if (task.equals(checkedTask)) {
-                return false;
+            if (task.getId() == checkedTask.getId()) {
+                if (task.equals(checkedTask)) {
+                    return true;
+                } else {
+                    continue;
+                }
             }
+
             if (isTaskOverlapAnotherTask(checkedTask, task)) {
                 throw new TaskOverlapAnotherTaskException("Fail to " + methodName + " because " +
                         checkedTask.getName() + " overlap " + task.getName());

@@ -13,7 +13,7 @@ public class SubTask extends Task {
         this.epicId = epicId;
     }
 
-    public SubTask(Integer epicId, String name, String description, long durationMinutes, String startTime) {
+    public SubTask(Integer epicId, String name, String description, String durationMinutes, String startTime) {
         super(name, description, durationMinutes, startTime);
         this.epicId = epicId;
     }
@@ -40,7 +40,8 @@ public class SubTask extends Task {
         if (this == o) return true;
         if (!(o instanceof SubTask)) return false;
         SubTask subTask = (SubTask) o;
-        return subTask.name.equals(name) && subTask.description.equals(description);
+        return subTask.name.equals(name) && subTask.description.equals(description)
+                && subTask.startTime.isEqual(startTime) && subTask.duration.equals(duration) && subTask.state.equals(state);
     }
 
     @Override

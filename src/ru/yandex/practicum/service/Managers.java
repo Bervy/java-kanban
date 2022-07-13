@@ -9,12 +9,16 @@ import ru.yandex.practicum.history.InMemoryHistoryManager;
  */
 public interface Managers {
 
-    static TaskManager getDefault() {
-        return new InMemoryTaskManager();
+    static TaskManager getDefault(String url, int port, String key) {
+        return new HTTPTaskManager(url, port, key);
     }
 
     static TaskManager getFileBacked() {
         return new FileBackedTasksManager();
+    }
+
+    static TaskManager getInMemory() {
+        return new InMemoryTaskManager();
     }
 
     static HistoryManager getDefaultHistory() {

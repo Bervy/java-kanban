@@ -1,5 +1,7 @@
 package ru.yandex.practicum.task;
 
+import ru.yandex.practicum.exceptions.TaskCreateException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -17,6 +19,9 @@ public class Task {
     protected LocalDateTime startTime;
 
     public Task(String name, String description) {
+        if (name == null || description == null) {
+            throw new TaskCreateException("Can't create Task");
+        }
         this.name = name;
         this.description = description;
         this.id = 0;
@@ -25,12 +30,15 @@ public class Task {
         this.startTime = LocalDateTime.MAX;
     }
 
-    public Task(String name, String description, long durationMinutes, String startTime) {
+    public Task(String name, String description, String durationMinutes, String startTime) {
+        if (name == null || description == null || durationMinutes == null || startTime == null) {
+            throw new TaskCreateException("Can't create Task");
+        }
         this.name = name;
         this.description = description;
         this.id = 0;
         this.state = State.NEW;
-        this.duration = Duration.ofMinutes(durationMinutes);
+        this.duration = Duration.parse(durationMinutes);
         this.startTime = LocalDateTime.parse(startTime);
     }
 
@@ -85,8 +93,8 @@ public class Task {
         return duration;
     }
 
-    public void setDuration(long minutes) {
-        this.duration = Duration.ofMinutes(minutes);
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 
     public LocalDateTime getStartTime() {
@@ -103,7 +111,7 @@ public class Task {
         if (!(o instanceof Task)) return false;
         Task task = (Task) o;
         return task.name.equals(name) && task.description.equals(description)
-                && task.startTime.isEqual(startTime) && task.duration.equals(duration);
+                && task.startTime.isEqual(startTime) && task.duration.equals(duration) && task.state.equals(state);
     }
 
     @Override

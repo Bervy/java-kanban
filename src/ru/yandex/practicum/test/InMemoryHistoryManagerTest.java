@@ -19,17 +19,29 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 class InMemoryHistoryManagerTest {
 
-    TaskManager inMemoryTaskManager;
+    private TaskManager inMemoryTaskManager;
 
     @BeforeEach
     public void setup() {
-        inMemoryTaskManager = Managers.getDefault();
-        Task task1 = new Task("Task1", "Task1", 30, "2022-08-30T06:00:00");
-        Task task2 = new Task("Task2", "Task2", 30, "2022-08-30T08:00:00");
-        Epic epic1 = new Epic("Epic1", "Epic1");
-        SubTask subTask1 = new SubTask(3, "SubTask1", "SubTask1"
-                , 30, "2022-08-30T10:00:00");
-
+        inMemoryTaskManager = Managers.getInMemory();
+        Task task1 = new Task(
+                "Task1",
+                "Task1",
+                "PT30M",
+                "2022-08-30T06:00:00");
+        Task task2 = new Task(
+                "Task2",
+                "Task2",
+                "PT30M",
+                "2022-08-30T08:00:00");
+        Epic epic1 = new Epic(
+                "Epic1",
+                "Epic1");
+        SubTask subTask1 = new SubTask(
+                3, "SubTask1",
+                "SubTask1",
+                "PT30M",
+                "2022-08-30T10:00:00");
         inMemoryTaskManager.addTask(task1);
         inMemoryTaskManager.addTask(task2);
         inMemoryTaskManager.addEpic(epic1);

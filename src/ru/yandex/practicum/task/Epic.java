@@ -11,12 +11,11 @@ import java.util.List;
  */
 public class Epic extends Task {
 
-    //Для одного теста пришлось убрать final
-    private final List<Integer> subTasksIds;
+    private List<Integer> subTasksIds;
     private LocalDateTime endTime;
 
     public Epic(String name, String description) {
-        super(name, description, 0, LocalDateTime.MAX.toString());
+        super(name, description, "PT0M", LocalDateTime.MAX.toString());
         endTime = LocalDateTime.MIN;
         this.subTasksIds = new ArrayList<>();
     }
@@ -57,12 +56,16 @@ public class Epic extends Task {
         this.duration = this.duration.minus(duration);
     }
 
+    public void setSubTasksIds(List<Integer> subTasksIds) {
+        this.subTasksIds = subTasksIds;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Epic epic = (Epic) o;
-        return epic.name.equals(name) && epic.description.equals(description);
+        return epic.name.equals(name) && epic.description.equals(description) && epic.state.equals(state);
     }
 
     @Override
