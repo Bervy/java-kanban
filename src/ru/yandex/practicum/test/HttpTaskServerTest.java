@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.adapters.DurationAdapter;
 import ru.yandex.practicum.adapters.LocalDateTimeAdapter;
-import ru.yandex.practicum.exceptions.ResponseException;
+import ru.yandex.practicum.test.exceptions.ResponseException;
 import ru.yandex.practicum.server.HttpTaskServer;
 import ru.yandex.practicum.server.KVServer;
 import ru.yandex.practicum.task.Epic;
