@@ -12,6 +12,7 @@ import ru.yandex.practicum.service.TaskManager;
 import ru.yandex.practicum.task.Epic;
 import ru.yandex.practicum.task.SubTask;
 import ru.yandex.practicum.task.Task;
+import ru.yandex.practicum.task.TaskType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +23,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.yandex.practicum.server.KVServer.*;
+import static ru.yandex.practicum.task.TaskType.*;
 
 /**
  * @author Vlad Osipov
@@ -39,7 +43,7 @@ public class HttpTaskServer {
     private static final String URL = "http://localhost:";
     private static final String KEY = "TEST";
     private final TaskManager httpTaskManager = Managers.getDefault(URL, PORT_HTTP_TASK_MANAGER, KEY);
-    HttpServer httpServer;
+    private HttpServer httpServer;
 
     public void start() {
         try {
@@ -76,7 +80,7 @@ public class HttpTaskServer {
         String taskParameters;
         try (exchange) {
             switch (requestMethod) {
-                case "GET" -> {
+                case KVServer.GET -> {
                     taskParameters = exchange.getRequestURI().getQuery();
                     if (taskParameters != null) {
                         int getTaskId = Integer.parseInt(taskParameters.split("=")[1]);
@@ -84,41 +88,45 @@ public class HttpTaskServer {
                         if (foundedTask != null) {
                             responseTaskFoundWithStatus200(foundedTask, exchange);
                         } else {
-                            responseWithStatusCode(404, "No task with this id", exchange);
+                            //Вопрос ко всем кодам ответа, правильные ли они и хорошо
+                            //ли отправлять в теле ответа сообщение или грубо говоря
+                            //если создаю таску, то отправить саму таску в json
+                            //Хотя конечно это учебный проект и не стоит париться)
+                            responseWithStatusCode(NOT_FOUND, "No task with this id", exchange);
                         }
                     } else {
                         responseWithAllTasksOrHistory("Tasks", exchange);
                     }
                 }
-                case "POST" -> {
+                case KVServer.POST -> {
                     try {
-                        Task task = getTaskFromJson("Task", exchange);
+                        Task task = getTaskFromJson(TASK, exchange);
                         if (httpTaskManager.addTask(task)) {
-                            responseWithStatusCode(201, "Task created", exchange);
+                            responseWithStatusCode(CREATED, "Task created", exchange);
                         } else if (httpTaskManager.updateTask(task)) {
-                            responseWithStatusCode(200, "Task updated", exchange);
+                            responseWithStatusCode(OK, "Task updated", exchange);
                         } else {
-                            responseWithStatusCode(404, "Task already exists", exchange);
+                            responseWithStatusCode(NOT_FOUND, "Task already exists", exchange);
                         }
                     } catch (TaskOverlapAnotherTaskException e) {
-                        responseWithStatusCode(404, "Task overlap by time", exchange);
+                        responseWithStatusCode(NOT_FOUND, "Task overlap by time", exchange);
                     } catch (TaskCreateException e) {
-                        responseWithStatusCode(404, "Task has null fields", exchange);
+                        responseWithStatusCode(NOT_FOUND, "Task has null fields", exchange);
                     }
                 }
-                case "DELETE" -> {
+                case KVServer.DELETE -> {
                     taskParameters = exchange.getRequestURI().getQuery();
                     if (taskParameters != null) {
                         int deleteId = Integer.parseInt(taskParameters.split("=")[1]);
                         if (httpTaskManager.removeTask(deleteId)) {
-                            responseWithStatusCode(200, "Task deleted", exchange);
+                            responseWithStatusCode(OK, "Task deleted", exchange);
                         } else {
-                            responseWithStatusCode(404, "Task not deleted", exchange);
+                            responseWithStatusCode(NOT_FOUND, "Task not deleted", exchange);
                         }
                     } else {
                         httpTaskManager.removeAllTasks();
                         int sizeOfTasks = httpTaskManager.getTasks().size();
-                        responseWithStatusCode(200, String.valueOf(sizeOfTasks), exchange);
+                        responseWithStatusCode(OK, String.valueOf(sizeOfTasks), exchange);
                     }
                 }
                 default -> wrongMethod(exchange);
@@ -131,7 +139,7 @@ public class HttpTaskServer {
         String getTaskParameters;
         try (exchange) {
             switch (requestMethod) {
-                case "GET" -> {
+                case KVServer.GET -> {
                     getTaskParameters = exchange.getRequestURI().getQuery();
                     if (getTaskParameters != null) {
                         String path = exchange.getRequestURI().getPath();
@@ -140,7 +148,7 @@ public class HttpTaskServer {
                         if (parts.length == 4 && parts[3].equals("epic")) {
                             Epic foundedEpic = httpTaskManager.getEpic(getId);
                             if (foundedEpic == null) {
-                                responseWithStatusCode(404, "Epic not found", exchange);
+                                responseWithStatusCode(NOT_FOUND, "Epic not found", exchange);
                             } else {
                                 List<Integer> subTasksOfEpic = httpTaskManager.getSubTasksOfEpic(foundedEpic);
                                 if (!subTasksOfEpic.isEmpty()) {
@@ -148,9 +156,9 @@ public class HttpTaskServer {
                                             gson.toJson("Subtasks") + " : " +
                                             gson.toJson(subTasksOfEpic) +
                                             "}";
-                                    responseWithStatusCode(200, toJson, exchange);
+                                    responseWithStatusCode(OK, toJson, exchange);
                                 } else {
-                                    responseWithStatusCode(200, "0", exchange);
+                                    responseWithStatusCode(OK, "0", exchange);
                                 }
                             }
                         } else {
@@ -158,42 +166,42 @@ public class HttpTaskServer {
                             if (foundedSubTask != null) {
                                 responseTaskFoundWithStatus200(foundedSubTask, exchange);
                             } else {
-                                responseWithStatusCode(404, "No subtask with this id", exchange);
+                                responseWithStatusCode(NOT_FOUND, "No subtask with this id", exchange);
                             }
                         }
                     } else {
                         responseWithAllTasksOrHistory("SubTasks", exchange);
                     }
                 }
-                case "POST" -> {
+                case KVServer.POST -> {
                     try {
-                        SubTask subTask = (SubTask) getTaskFromJson("Subtask", exchange);
+                        SubTask subTask = (SubTask) getTaskFromJson(SUBTASK, exchange);
                         if (httpTaskManager.addSubTask(subTask)) {
-                            responseWithStatusCode(201, "Subtask created", exchange);
+                            responseWithStatusCode(CREATED, "Subtask created", exchange);
                         } else if (httpTaskManager.updateSubTask(subTask)) {
-                            responseWithStatusCode(200, "Subtask updated", exchange);
+                            responseWithStatusCode(OK, "Subtask updated", exchange);
                         } else {
-                            responseWithStatusCode(404, "Subtask already exists", exchange);
+                            responseWithStatusCode(NOT_FOUND, "Subtask already exists", exchange);
                         }
                     } catch (TaskOverlapAnotherTaskException e) {
-                        responseWithStatusCode(404, "Subtask overlap by time", exchange);
+                        responseWithStatusCode(NOT_FOUND, "Subtask overlap by time", exchange);
                     } catch (TaskCreateException e) {
-                        responseWithStatusCode(404, "Subtask has null fields", exchange);
+                        responseWithStatusCode(NOT_FOUND, "Subtask has null fields", exchange);
                     }
                 }
-                case "DELETE" -> {
+                case KVServer.DELETE -> {
                     getTaskParameters = exchange.getRequestURI().getQuery();
                     if (getTaskParameters != null) {
                         int deleteId = Integer.parseInt(getTaskParameters.split("=")[1]);
                         if (httpTaskManager.removeSubTask(deleteId)) {
-                            responseWithStatusCode(200, "Subtask deleted", exchange);
+                            responseWithStatusCode(OK, "Subtask deleted", exchange);
                         } else {
-                            responseWithStatusCode(404, "Subtask not deleted", exchange);
+                            responseWithStatusCode(NOT_FOUND, "Subtask not deleted", exchange);
                         }
                     } else {
                         httpTaskManager.removeAllTasks();
                         int sizeOfSubTasks = httpTaskManager.getTasks().size();
-                        responseWithStatusCode(200, String.valueOf(sizeOfSubTasks), exchange);
+                        responseWithStatusCode(OK, String.valueOf(sizeOfSubTasks), exchange);
                     }
                 }
                 default -> wrongMethod(exchange);
@@ -206,7 +214,7 @@ public class HttpTaskServer {
         String getTaskParameters;
         try (exchange) {
             switch (requestMethod) {
-                case "GET" -> {
+                case KVServer.GET -> {
                     getTaskParameters = exchange.getRequestURI().getQuery();
                     if (getTaskParameters != null) {
                         int getId = Integer.parseInt(getTaskParameters.split("=")[1]);
@@ -214,39 +222,39 @@ public class HttpTaskServer {
                         if (foundedEpic != null) {
                             responseTaskFoundWithStatus200(foundedEpic, exchange);
                         } else {
-                            responseWithStatusCode(404, "No epic with this id", exchange);
+                            responseWithStatusCode(NOT_FOUND, "No epic with this id", exchange);
                         }
                     } else {
                         responseWithAllTasksOrHistory("Epics", exchange);
                     }
                 }
-                case "POST" -> {
+                case KVServer.POST -> {
                     try {
-                        Epic epic = (Epic) getTaskFromJson("Epic", exchange);
+                        Epic epic = (Epic) getTaskFromJson(EPIC, exchange);
                         if (httpTaskManager.addEpic(epic)) {
-                            responseWithStatusCode(201, "Epic created", exchange);
+                            responseWithStatusCode(CREATED, "Epic created", exchange);
                         } else if (httpTaskManager.updateEpic(epic)) {
-                            responseWithStatusCode(200, "Epic updated", exchange);
+                            responseWithStatusCode(OK, "Epic updated", exchange);
                         } else {
-                            responseWithStatusCode(404, "Epic already exists", exchange);
+                            responseWithStatusCode(NOT_FOUND, "Epic already exists", exchange);
                         }
                     } catch (TaskCreateException e) {
-                        responseWithStatusCode(404, "Epic has null fields", exchange);
+                        responseWithStatusCode(NOT_FOUND, "Epic has null fields", exchange);
                     }
                 }
-                case "DELETE" -> {
+                case KVServer.DELETE -> {
                     getTaskParameters = exchange.getRequestURI().getQuery();
                     if (getTaskParameters != null) {
                         int deleteId = Integer.parseInt(getTaskParameters.split("=")[1]);
                         if (httpTaskManager.removeEpic(deleteId)) {
-                            responseWithStatusCode(200, "Epic deleted", exchange);
+                            responseWithStatusCode(OK, "Epic deleted", exchange);
                         } else {
-                            responseWithStatusCode(404, "Epic not deleted", exchange);
+                            responseWithStatusCode(NOT_FOUND, "Epic not deleted", exchange);
                         }
                     } else {
                         httpTaskManager.removeAllEpics();
                         int sizeOfEpics = httpTaskManager.getEpics().size();
-                        responseWithStatusCode(200, String.valueOf(sizeOfEpics), exchange);
+                        responseWithStatusCode(OK, String.valueOf(sizeOfEpics), exchange);
                     }
                 }
                 default -> wrongMethod(exchange);
@@ -254,7 +262,7 @@ public class HttpTaskServer {
         }
     }
 
-    private Task getTaskFromJson(String type, HttpExchange exchange) throws IOException {
+    private Task getTaskFromJson(TaskType type, HttpExchange exchange) throws IOException {
         JsonObject jsonObject = getJsonObject(exchange);
         if (!jsonObject.has("id") ||
                 !jsonObject.has("name") ||
@@ -270,7 +278,7 @@ public class HttpTaskServer {
         String startTime = jsonObject.get("startTime").getAsString();
 
         switch (type) {
-            case "Epic":
+            case EPIC:
                 if (!jsonObject.has("endTime") || !jsonObject.has("subTasksIds")) {
                     throw new TaskCreateException("Json don't have epic fields");
                 } else {
@@ -290,7 +298,7 @@ public class HttpTaskServer {
                     epic.setSubTasksIds(subTaskIds);
                     return epic;
                 }
-            case "Subtask":
+            case SUBTASK:
                 if (!jsonObject.has("epicId")) {
                     throw new TaskCreateException("Json don't have subtask fields");
                 } else {
@@ -299,7 +307,7 @@ public class HttpTaskServer {
                     subTask.setId(id);
                     return subTask;
                 }
-            case "Task":
+            case TASK:
                 Task task = new Task(name, description, duration, startTime);
                 task.setId(id);
                 return task;
@@ -312,7 +320,7 @@ public class HttpTaskServer {
     private void historyHandler(HttpExchange exchange) throws IOException {
         String requestMethod = exchange.getRequestMethod();
         try (exchange) {
-            if (requestMethod.equals("GET")) {
+            if (requestMethod.equals(KVServer.GET)) {
                 responseWithAllTasksOrHistory("History", exchange);
             } else {
                 wrongMethod(exchange);
@@ -352,14 +360,14 @@ public class HttpTaskServer {
                     gson.toJson(type) + " : " +
                     gson.toJson(list) +
                     "}";
-            responseWithStatusCode(200, toJson, exchange);
+            responseWithStatusCode(OK, toJson, exchange);
         } else {
-            responseWithStatusCode(200, gson.toJson(0), exchange);
+            responseWithStatusCode(OK, gson.toJson(0), exchange);
         }
     }
 
     private <T> void responseTaskFoundWithStatus200(T foundedTask, HttpExchange exchange) throws IOException {
-        exchange.sendResponseHeaders(200, 0);
+        exchange.sendResponseHeaders(OK, 0);
         String toJson = gson.toJson(foundedTask);
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(toJson.getBytes());
@@ -374,7 +382,7 @@ public class HttpTaskServer {
     }
 
     private void wrongMethod(HttpExchange exchange) throws IOException {
-        exchange.sendResponseHeaders(404, 0);
+        exchange.sendResponseHeaders(NOT_FOUND, 0);
         String answer = "Wrong method";
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(answer.getBytes());
@@ -385,12 +393,12 @@ public class HttpTaskServer {
     private JsonObject getJsonObject(HttpExchange exchange) throws IOException {
         try (InputStreamReader isr = new InputStreamReader(exchange.getRequestBody());
              BufferedReader br = new BufferedReader(isr)) {
-            int b;
-            StringBuilder buf = new StringBuilder(512);
-            while ((b = br.read()) != -1) {
-                buf.append((char) b);
+            int character;
+            StringBuilder buffer = new StringBuilder(512);
+            while ((character = br.read()) != -1) {
+                buffer.append((char) character);
             }
-            JsonElement jsonElement = JsonParser.parseString(buf.toString());
+            JsonElement jsonElement = JsonParser.parseString(buffer.toString());
             return jsonElement.getAsJsonObject();
         }
     }
