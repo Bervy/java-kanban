@@ -80,7 +80,7 @@ public class HttpTaskServer {
         String taskParameters;
         try (exchange) {
             switch (requestMethod) {
-                case KVServer.GET -> {
+                case GET -> {
                     taskParameters = exchange.getRequestURI().getQuery();
                     if (taskParameters != null) {
                         int getTaskId = Integer.parseInt(taskParameters.split("=")[1]);
@@ -98,7 +98,7 @@ public class HttpTaskServer {
                         responseWithAllTasksOrHistory("Tasks", exchange);
                     }
                 }
-                case KVServer.POST -> {
+                case POST -> {
                     try {
                         Task task = getTaskFromJson(TASK, exchange);
                         if (httpTaskManager.addTask(task)) {
@@ -114,7 +114,7 @@ public class HttpTaskServer {
                         responseWithStatusCode(NOT_FOUND, "Task has null fields", exchange);
                     }
                 }
-                case KVServer.DELETE -> {
+                case DELETE -> {
                     taskParameters = exchange.getRequestURI().getQuery();
                     if (taskParameters != null) {
                         int deleteId = Integer.parseInt(taskParameters.split("=")[1]);
@@ -139,7 +139,7 @@ public class HttpTaskServer {
         String getTaskParameters;
         try (exchange) {
             switch (requestMethod) {
-                case KVServer.GET -> {
+                case GET -> {
                     getTaskParameters = exchange.getRequestURI().getQuery();
                     if (getTaskParameters != null) {
                         String path = exchange.getRequestURI().getPath();
@@ -173,7 +173,7 @@ public class HttpTaskServer {
                         responseWithAllTasksOrHistory("SubTasks", exchange);
                     }
                 }
-                case KVServer.POST -> {
+                case POST -> {
                     try {
                         SubTask subTask = (SubTask) getTaskFromJson(SUBTASK, exchange);
                         if (httpTaskManager.addSubTask(subTask)) {
@@ -189,7 +189,7 @@ public class HttpTaskServer {
                         responseWithStatusCode(NOT_FOUND, "Subtask has null fields", exchange);
                     }
                 }
-                case KVServer.DELETE -> {
+                case DELETE -> {
                     getTaskParameters = exchange.getRequestURI().getQuery();
                     if (getTaskParameters != null) {
                         int deleteId = Integer.parseInt(getTaskParameters.split("=")[1]);
@@ -214,7 +214,7 @@ public class HttpTaskServer {
         String getTaskParameters;
         try (exchange) {
             switch (requestMethod) {
-                case KVServer.GET -> {
+                case GET -> {
                     getTaskParameters = exchange.getRequestURI().getQuery();
                     if (getTaskParameters != null) {
                         int getId = Integer.parseInt(getTaskParameters.split("=")[1]);
@@ -228,7 +228,7 @@ public class HttpTaskServer {
                         responseWithAllTasksOrHistory("Epics", exchange);
                     }
                 }
-                case KVServer.POST -> {
+                case POST -> {
                     try {
                         Epic epic = (Epic) getTaskFromJson(EPIC, exchange);
                         if (httpTaskManager.addEpic(epic)) {
@@ -242,7 +242,7 @@ public class HttpTaskServer {
                         responseWithStatusCode(NOT_FOUND, "Epic has null fields", exchange);
                     }
                 }
-                case KVServer.DELETE -> {
+                case DELETE -> {
                     getTaskParameters = exchange.getRequestURI().getQuery();
                     if (getTaskParameters != null) {
                         int deleteId = Integer.parseInt(getTaskParameters.split("=")[1]);
