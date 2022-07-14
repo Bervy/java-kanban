@@ -19,9 +19,18 @@ public class KVServer {
     private final String apiToken;
     private final HttpServer server;
     private final Map<String, String> data = new HashMap<>();
+    public static final String GET = "GET";
+    public static final String POST = "POST";
+    public static final String DELETE = "DELETE";
+    public static final int OK = 200;
+    public static final int CREATED = 201;
+    public static final int BAD_REQUEST = 400;
+    public static final int FORBIDDEN = 403;
+    public static final int NOT_FOUND = 404;
+    public static final int METHOD_NOT_ALLOWED = 405;
 
     public KVServer(int port) {
-        apiToken = generateApiToken();
+        this.apiToken = generateApiToken();
         try {
             server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
         } catch (IOException e) {
@@ -32,62 +41,62 @@ public class KVServer {
         server.createContext("/load", this::load);
     }
 
-    private void load(HttpExchange h) throws IOException {
-        try (h) {
-            if (!hasAuth(h)) {
-                h.sendResponseHeaders(403, 0);
+    private void load(HttpExchange exchange) throws IOException {
+        try (exchange) {
+            if (!hasAuth(exchange)) {
+                exchange.sendResponseHeaders(FORBIDDEN, 0);
                 return;
             }
-            if ("GET".equals(h.getRequestMethod())) {
-                String key = h.getRequestURI().getPath().substring("/load/".length());
+            if (GET.equals(exchange.getRequestMethod())) {
+                String key = exchange.getRequestURI().getPath().substring("/load/".length());
                 if (key.isEmpty()) {
-                    h.sendResponseHeaders(400, 0);
+                    exchange.sendResponseHeaders(BAD_REQUEST, 0);
                     return;
                 }
                 if (data.containsKey(key)) {
-                    h.sendResponseHeaders(200, 0);
+                    exchange.sendResponseHeaders(OK, 0);
                     byte[] value = data.get(key).getBytes(UTF_8);
-                    h.getResponseBody().write(value);
+                    exchange.getResponseBody().write(value);
                 } else {
-                    h.sendResponseHeaders(400, 0);
+                    exchange.sendResponseHeaders(BAD_REQUEST, 0);
                 }
             } else {
-                h.sendResponseHeaders(405, 0);
+                exchange.sendResponseHeaders(METHOD_NOT_ALLOWED, 0);
             }
         }
     }
 
-    private void save(HttpExchange h) throws IOException {
-        try (h) {
-            if (!hasAuth(h)) {
-                h.sendResponseHeaders(403, 0);
+    private void save(HttpExchange exchange) throws IOException {
+        try (exchange) {
+            if (!hasAuth(exchange)) {
+                exchange.sendResponseHeaders(FORBIDDEN, 0);
                 return;
             }
-            if ("POST".equals(h.getRequestMethod())) {
-                String key = h.getRequestURI().getPath().substring("/save/".length());
+            if (POST.equals(exchange.getRequestMethod())) {
+                String key = exchange.getRequestURI().getPath().substring("/save/".length());
                 if (key.isEmpty()) {
-                    h.sendResponseHeaders(400, 0);
+                    exchange.sendResponseHeaders(BAD_REQUEST, 0);
                     return;
                 }
-                String value = readText(h);
+                String value = readText(exchange);
                 if (value.isEmpty()) {
-                    h.sendResponseHeaders(400, 0);
+                    exchange.sendResponseHeaders(BAD_REQUEST, 0);
                     return;
                 }
                 data.put(key, value);
-                h.sendResponseHeaders(200, 0);
+                exchange.sendResponseHeaders(OK, 0);
             } else {
-                h.sendResponseHeaders(405, 0);
+                exchange.sendResponseHeaders(METHOD_NOT_ALLOWED, 0);
             }
         }
     }
 
-    private void register(HttpExchange h) throws IOException {
-        try (h) {
-            if ("GET".equals(h.getRequestMethod())) {
-                sendText(h, apiToken);
+    private void register(HttpExchange exchange) throws IOException {
+        try (exchange) {
+            if (GET.equals(exchange.getRequestMethod())) {
+                sendText(exchange, apiToken);
             } else {
-                h.sendResponseHeaders(405, 0);
+                exchange.sendResponseHeaders(METHOD_NOT_ALLOWED, 0);
             }
         }
     }
@@ -104,19 +113,19 @@ public class KVServer {
         return "" + System.currentTimeMillis();
     }
 
-    protected boolean hasAuth(HttpExchange h) {
-        String rawQuery = h.getRequestURI().getRawQuery();
+    protected boolean hasAuth(HttpExchange exchange) {
+        String rawQuery = exchange.getRequestURI().getRawQuery();
         return rawQuery != null && (rawQuery.contains("API_TOKEN=" + apiToken) || rawQuery.contains("API_TOKEN=DEBUG"));
     }
 
-    protected String readText(HttpExchange h) throws IOException {
-        return new String(h.getRequestBody().readAllBytes(), UTF_8);
+    protected String readText(HttpExchange exchange) throws IOException {
+        return new String(exchange.getRequestBody().readAllBytes(), UTF_8);
     }
 
-    protected void sendText(HttpExchange h, String text) throws IOException {
+    protected void sendText(HttpExchange exchange, String text) throws IOException {
         byte[] resp = text.getBytes(UTF_8);
-        h.getResponseHeaders().add("Content-Type", "application/json");
-        h.sendResponseHeaders(200, resp.length);
-        h.getResponseBody().write(resp);
+        exchange.getResponseHeaders().add("Content-Type", "application/json");
+        exchange.sendResponseHeaders(OK, resp.length);
+        exchange.getResponseBody().write(resp);
     }
 }
