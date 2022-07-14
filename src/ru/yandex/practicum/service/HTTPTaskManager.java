@@ -10,7 +10,6 @@ import ru.yandex.practicum.server.KVTaskClient;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * @author Vlad Osipov
@@ -21,7 +20,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     private String key;
 
     public HTTPTaskManager(String url, int port, String key) {
-        kvTaskClient = new KVTaskClient(url, port);
+        this.kvTaskClient = new KVTaskClient(url, port);
         this.key = key;
     }
 
@@ -41,19 +40,5 @@ public class HTTPTaskManager extends FileBackedTasksManager {
                 registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).
                 registerTypeAdapter(HistoryManager.class, new InMemoryHistoryManagerAdapter(this)).
                 setPrettyPrinting().create();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HTTPTaskManager)) return false;
-        if (!super.equals(o)) return false;
-        HTTPTaskManager that = (HTTPTaskManager) o;
-        return Objects.equals(kvTaskClient, that.kvTaskClient) && Objects.equals(key, that.key);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(kvTaskClient, key);
     }
 }
