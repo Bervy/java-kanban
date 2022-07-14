@@ -1,4 +1,4 @@
-package ru.yandex.practicum.exceptions;
+package ru.yandex.practicum.test.exceptions;
 
 /**
  * @author Vlad Osipov
