@@ -1,5 +1,6 @@
 package ru.yandex.practicum.server;
 
+import org.junit.platform.commons.util.StringUtils;
 import ru.yandex.practicum.exceptions.ManagerLoadException;
 import ru.yandex.practicum.exceptions.ManagerSaveException;
 import ru.yandex.practicum.exceptions.TaskClientRegisterException;
@@ -16,8 +17,8 @@ import java.net.http.HttpResponse;
  */
 public class KVTaskClient {
     private final String apiToken;
-    String url;
-    int port;
+    private final String url;
+    private final int port;
 
     public KVTaskClient(String url, int port) {
         this.port = port;
@@ -36,7 +37,7 @@ public class KVTaskClient {
             response = client.send(request, handler);
         } catch (IOException | InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new TaskClientRegisterException("Can't register");
+            throw new TaskClientRegisterException("Can't register" + e.getMessage());
         }
         apiToken = response.body();
     }
@@ -56,9 +57,9 @@ public class KVTaskClient {
             response = client.send(request, handler);
         } catch (IOException | InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ManagerSaveException("Can't save to server");
+            throw new ManagerSaveException("Can't save to server" + e.getMessage());
         }
-        if (response.statusCode() != 200) {
+        if (StringUtils.isBlank(String.valueOf(response)) || response.statusCode() != 200) {
             throw new ManagerSaveException("Can't save to server");
         }
     }
@@ -78,9 +79,9 @@ public class KVTaskClient {
             response = client.send(request, handler);
         } catch (IOException | InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ManagerLoadException("Can't load from server");
+            throw new ManagerLoadException("Can't load from server" + e.getMessage());
         }
-        if (response.body().isEmpty()) {
+        if (StringUtils.isBlank(response.body())) {
             throw new ManagerLoadException("Can't load from server");
         }
         return response.body();
