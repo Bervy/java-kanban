@@ -73,9 +73,9 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
                 "Epic1",
                 "Epic1");
 
-        fileBackedTaskManager.addTask(task1);
-        fileBackedTaskManager.addTask(task2);
-        fileBackedTaskManager.addEpic(epic1);
+        fileBackedTaskManager.isAddTask(task1);
+        fileBackedTaskManager.isAddTask(task2);
+        fileBackedTaskManager.isAddEpic(epic1);
         fileBackedTaskManager.getTask(1);
         fileBackedTaskManager.getTask(2);
         fileBackedTaskManager.getEpic(3);
@@ -100,9 +100,9 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
                 "Epic1",
                 "Epic1");
 
-        fileBackedTaskManager.addTask(task1);
-        fileBackedTaskManager.addTask(task2);
-        fileBackedTaskManager.addEpic(epic1);
+        fileBackedTaskManager.isAddTask(task1);
+        fileBackedTaskManager.isAddTask(task2);
+        fileBackedTaskManager.isAddEpic(epic1);
 
         TaskManager loadedFromFile = FileLoader.loadFromFile(file);
         assertEquals(fileBackedTaskManager, loadedFromFile, "Objects not equal");
@@ -135,11 +135,11 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
                 "Subtask2",
                 "PT30M",
                 "2022-08-30T09:00:00");
-        fileBackedTaskManager.addTask(task1);
-        fileBackedTaskManager.addTask(task2);
-        fileBackedTaskManager.addEpic(epic1);
-        fileBackedTaskManager.addSubTask(subTask1);
-        fileBackedTaskManager.addSubTask(subTask2);
+        fileBackedTaskManager.isAddTask(task1);
+        fileBackedTaskManager.isAddTask(task2);
+        fileBackedTaskManager.isAddEpic(epic1);
+        fileBackedTaskManager.isAddSubTask(subTask1);
+        fileBackedTaskManager.isAddSubTask(subTask2);
         fileBackedTaskManager.getTask(1);
         fileBackedTaskManager.getTask(2);
         fileBackedTaskManager.getEpic(3);
@@ -165,9 +165,9 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         Epic epic1 = new Epic(
                 "Epic1",
                 "Epic1");
-        fileBackedTaskManager.addTask(task1);
-        fileBackedTaskManager.addTask(task2);
-        fileBackedTaskManager.addEpic(epic1);
+        fileBackedTaskManager.isAddTask(task1);
+        fileBackedTaskManager.isAddTask(task2);
+        fileBackedTaskManager.isAddEpic(epic1);
         fileBackedTaskManager.getTask(1);
         fileBackedTaskManager.getTask(2);
         fileBackedTaskManager.getEpic(3);
@@ -204,7 +204,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
                 "PT30M",
                 "2022-08-30T12:00:00");
         fileBackedTaskManager.setFileName(".");
-        Exception exception = assertThrows(ManagerSaveException.class, () -> fileBackedTaskManager.addTask(task1));
+        Exception exception = assertThrows(ManagerSaveException.class, () -> fileBackedTaskManager.isAddTask(task1));
         assertEquals("Can't save to file", exception.getMessage(), "Exception not thrown");
     }
 }
