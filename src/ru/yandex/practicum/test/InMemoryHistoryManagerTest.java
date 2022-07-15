@@ -42,10 +42,10 @@ class InMemoryHistoryManagerTest {
                 "SubTask1",
                 "PT30M",
                 "2022-08-30T10:00:00");
-        inMemoryTaskManager.addTask(task1);
-        inMemoryTaskManager.addTask(task2);
-        inMemoryTaskManager.addEpic(epic1);
-        inMemoryTaskManager.addSubTask(subTask1);
+        inMemoryTaskManager.isAddTask(task1);
+        inMemoryTaskManager.isAddTask(task2);
+        inMemoryTaskManager.isAddEpic(epic1);
+        inMemoryTaskManager.isAddSubTask(subTask1);
     }
 
     @Test

@@ -59,7 +59,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean addTask(Task newTask) {
+    public boolean isAddTask(Task newTask) {
         if (newTask == null || tasks.containsKey(newTask.getId())
                 || isTaskOverlapTasksByTime(newTask, "addTask")) {
             return false;
@@ -71,7 +71,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean updateTask(Task updatedTask) {
+    public boolean isUpdateTask(Task updatedTask) {
         if (updatedTask != null && tasks.containsKey(updatedTask.getId()) &&
                 !isTaskOverlapTasksByTime(updatedTask, "updateTask")) {
             tasks.put(updatedTask.getId(), updatedTask);
@@ -83,7 +83,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean removeTask(int id) {
+    public boolean isRemoveTask(int id) {
         if (tasks.containsKey(id)) {
             historyManager.remove(id);
             tasksSortedByStartTime.remove(tasks.get(id));
@@ -123,7 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean addEpic(Epic newEpic) {
+    public boolean isAddEpic(Epic newEpic) {
         if (newEpic == null || epics.containsKey(newEpic.getId())) {
             return false;
         }
@@ -133,7 +133,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean updateEpic(Epic updatedEpic) {
+    public boolean isUpdateEpic(Epic updatedEpic) {
         if (updatedEpic != null && epics.containsKey(updatedEpic.getId()) && !epics.get(updatedEpic.getId()).equals(updatedEpic)) {
             epics.put(updatedEpic.getId(), updatedEpic);
             return true;
@@ -142,7 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean removeEpic(int id) {
+    public boolean isRemoveEpic(int id) {
         HashMap<Integer, SubTask> copySubTasks = new HashMap<>(subTasks);
         if (epics.get(id) != null) {
             for (Integer epicSubTaskId : epics.get(id).getSubTasks()) {
@@ -236,7 +236,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean addSubTask(SubTask newSubtask) {
+    public boolean isAddSubTask(SubTask newSubtask) {
         if (newSubtask == null || subTasks.containsKey(newSubtask.getId()) ||
                 isTaskOverlapTasksByTime(newSubtask, "addSubTask")) {
             return false;
@@ -254,7 +254,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean updateSubTask(SubTask updatedSubTask) {
+    public boolean isUpdateSubTask(SubTask updatedSubTask) {
         if (updatedSubTask != null && subTasks.containsKey(updatedSubTask.getId()) &&
                 !isTaskOverlapTasksByTime(updatedSubTask, "updateSubTask")) {
             Epic foundedEpic = getEpicBySubTask(updatedSubTask);
@@ -273,7 +273,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean removeSubTask(Integer id) {
+    public boolean isRemoveSubTask(Integer id) {
         SubTask removedSubTask = subTasks.remove(id);
         if (removedSubTask != null) {
             tasksSortedByStartTime.remove(removedSubTask);

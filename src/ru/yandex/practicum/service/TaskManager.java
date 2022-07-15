@@ -19,11 +19,11 @@ public interface TaskManager {
 
     Task getTask(int id);
 
-    boolean addTask(Task newTask);
+    boolean isAddTask(Task newTask);
 
-    boolean updateTask(Task updatedTask);
+    boolean isUpdateTask(Task updatedTask);
 
-    boolean removeTask(int id);
+    boolean isRemoveTask(int id);
 
     List<Epic> getEpics();
 
@@ -31,11 +31,11 @@ public interface TaskManager {
 
     Epic getEpic(int id);
 
-    boolean addEpic(Epic newEpic);
+    boolean isAddEpic(Epic newEpic);
 
-    boolean updateEpic(Epic updatedEpic);
+    boolean isUpdateEpic(Epic updatedEpic);
 
-    boolean removeEpic(int id);
+    boolean isRemoveEpic(int id);
 
     List<Integer> getSubTasksOfEpic(Epic epic);
 
@@ -45,11 +45,11 @@ public interface TaskManager {
 
     SubTask getSubTask(int id);
 
-    boolean addSubTask(SubTask newSubtask);
+    boolean isAddSubTask(SubTask newSubtask);
 
-    boolean updateSubTask(SubTask updatedSubTask);
+    boolean isUpdateSubTask(SubTask updatedSubTask);
 
-    boolean removeSubTask(Integer id);
+    boolean isRemoveSubTask(Integer id);
 
     List<Task> getHistory();
 
