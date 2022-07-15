@@ -19,24 +19,14 @@ W
 'src/ru/yandex/practicum/task/State.java,4\7\471578574deed856c7656f73920ec65f1c104417
 N
 .idea/libraries/gson_2_9_0.xml,0\2\029650b3282cd1f60425c91dfbca85f872d242c9
-?
-java-kanban.iml,d\f\df5dcbbd3f931c7c23855ccec11732ab4c8544f2
 >
 savedTasks.csv,b\a\ba4bcc02e1852c51c8dc3e315830a24c2058fc08
-l
-<src/ru/yandex/practicum/test/FileBackedTasksManagerTest.java,4\4\44ae5b553ab497302a14b2cbfa2644098922697f
-l
-<src/ru/yandex/practicum/test/InMemoryHistoryManagerTest.java,a\d\ad06a0263635f53c1d74d68fcca7019563d6711b
 i
 9src/ru/yandex/practicum/test/InMemoryTaskManagerTest.java,0\1\01b770409fe91d53be9723545e8bd99c0fb0bece
 ]
 -src/ru/yandex/practicum/service/Managers.java,7\7\771e084a0e9f5d14b89036b9a62f9642578ff807
 V
 &src/ru/yandex/practicum/task/Task.java,5\1\51588eb67af38870e44cbfb4bcf1d949b35b175d
-`
-0src/ru/yandex/practicum/service/TaskManager.java,1\6\1616745498de792bc38543aeff7bae534968cf70
-a
-1src/ru/yandex/practicum/test/TaskManagerTest.java,1\e\1e57d30b104149f59423c6aba90e4161a8d801c6
 e
 5src/ru/yandex/practicum/adapters/DurationAdapter.java,5\9\59498bb3bfed5222a50ef7345702ff6616c72a6d
 s
@@ -51,8 +41,6 @@ k
 ;src/ru/yandex/practicum/exceptions/TaskCreateException.java,9\1\91dd310a4d0874fa8d4b99f1781f372f906918e0
 _
 /src/ru/yandex/practicum/service/FileLoader.java,d\4\d429ded6a9249b45e8a546ef5a4007f0a59d96fd
-e
-5src/ru/yandex/practicum/test/HTTPTaskManagerTest.java,b\a\ba094a4deccc80cfc15b05f8689c25e7ebdbb132
 n
 >src/ru/yandex/practicum/test/exceptions/ResponseException.java,9\1\916cf04dffbe623ba1746651dda093fbde3a808c
 \
