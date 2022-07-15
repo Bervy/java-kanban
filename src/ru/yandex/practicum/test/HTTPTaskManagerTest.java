@@ -86,9 +86,9 @@ public class HTTPTaskManagerTest extends TaskManagerTest<HTTPTaskManager> {
         Epic epic1 = new Epic(
                 "Epic1",
                 "Epic1");
-        httpTaskManager.addTask(task1);
-        httpTaskManager.addTask(task2);
-        httpTaskManager.addEpic(epic1);
+        httpTaskManager.isAddTask(task1);
+        httpTaskManager.isAddTask(task2);
+        httpTaskManager.isAddEpic(epic1);
         httpTaskManager.getTask(1);
         httpTaskManager.getTask(2);
         httpTaskManager.getEpic(3);
@@ -112,9 +112,9 @@ public class HTTPTaskManagerTest extends TaskManagerTest<HTTPTaskManager> {
         Epic epic1 = new Epic(
                 "Epic1",
                 "Epic1");
-        httpTaskManager.addTask(task1);
-        httpTaskManager.addTask(task2);
-        httpTaskManager.addEpic(epic1);
+        httpTaskManager.isAddTask(task1);
+        httpTaskManager.isAddTask(task2);
+        httpTaskManager.isAddEpic(epic1);
         String loadedFromServer;
         String expected = gson.toJson(httpTaskManager);
         loadedFromServer = kvTaskClient.load(KEY);
@@ -148,11 +148,11 @@ public class HTTPTaskManagerTest extends TaskManagerTest<HTTPTaskManager> {
                 "Subtask2",
                 "PT30M",
                 "2022-08-30T09:00:00");
-        httpTaskManager.addTask(task1);
-        httpTaskManager.addTask(task2);
-        httpTaskManager.addEpic(epic1);
-        httpTaskManager.addSubTask(subTask1);
-        httpTaskManager.addSubTask(subTask2);
+        httpTaskManager.isAddTask(task1);
+        httpTaskManager.isAddTask(task2);
+        httpTaskManager.isAddEpic(epic1);
+        httpTaskManager.isAddSubTask(subTask1);
+        httpTaskManager.isAddSubTask(subTask2);
         httpTaskManager.getTask(1);
         httpTaskManager.getTask(2);
         httpTaskManager.getEpic(3);
@@ -179,9 +179,9 @@ public class HTTPTaskManagerTest extends TaskManagerTest<HTTPTaskManager> {
         Epic epic1 = new Epic(
                 "Epic1",
                 "Epic1");
-        httpTaskManager.addTask(task1);
-        httpTaskManager.addTask(task2);
-        httpTaskManager.addEpic(epic1);
+        httpTaskManager.isAddTask(task1);
+        httpTaskManager.isAddTask(task2);
+        httpTaskManager.isAddEpic(epic1);
         httpTaskManager.getTask(1);
         httpTaskManager.getTask(2);
         httpTaskManager.getEpic(3);
@@ -197,7 +197,7 @@ public class HTTPTaskManagerTest extends TaskManagerTest<HTTPTaskManager> {
                 "PT30M",
                 "2022-08-30T12:00:00");
         httpTaskManager.setKey("");
-        Exception exception = assertThrows(ManagerSaveException.class, () -> httpTaskManager.addTask(task1));
+        Exception exception = assertThrows(ManagerSaveException.class, () -> httpTaskManager.isAddTask(task1));
         assertEquals("Can't save to server", exception.getMessage(), "Exception not thrown");
     }
 }
