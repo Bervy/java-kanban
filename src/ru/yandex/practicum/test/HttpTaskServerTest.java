@@ -6,12 +6,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.adapters.DurationAdapter;
 import ru.yandex.practicum.adapters.LocalDateTimeAdapter;
-import ru.yandex.practicum.test.exceptions.ResponseException;
 import ru.yandex.practicum.server.HttpTaskServer;
 import ru.yandex.practicum.server.KVServer;
 import ru.yandex.practicum.task.Epic;
 import ru.yandex.practicum.task.SubTask;
 import ru.yandex.practicum.task.Task;
+import ru.yandex.practicum.test.exceptions.ResponseException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -23,6 +23,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.yandex.practicum.server.TaskResponseState.*;
+import static ru.yandex.practicum.task.TaskCollectionType.*;
+import static ru.yandex.practicum.task.TaskType.*;
 
 /**
  * @author Vlad Osipov
@@ -115,7 +118,7 @@ public class HttpTaskServerTest {
         JsonElement jsonElement = JsonParser.parseString(body);
         assertTrue(jsonElement.isJsonObject(), "Wrong answer from server");
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonArray jsonArray = jsonObject.getAsJsonArray("Tasks");
+        JsonArray jsonArray = jsonObject.getAsJsonArray(String.valueOf(TASKS));
         assertNotNull(jsonArray, "Tasks don't return");
         assertEquals(expectedSize, jsonArray.size(), "Wrong tasks size");
     }
@@ -147,7 +150,7 @@ public class HttpTaskServerTest {
     void shouldNotReturnTaskWithId5() {
         URI url = URI.create("http://localhost:8080/tasks/task/?id=5");
         HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
-        String expected = "No task with this id";
+        String expected = TASK.name() + " " + NOT_FOUND;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Task found");
     }
@@ -163,7 +166,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(newTask);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Task created";
+        String expected = TASK.name() + " " + CREATED;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Task not created");
     }
@@ -180,7 +183,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(newTask);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Task already exists";
+        String expected = TASK.name() + " " + ALREADY_EXISTS;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Task created");
     }
@@ -197,7 +200,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(newTask);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Task updated";
+        String expected = TASK.name() + " " + UPDATED;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Task not updated");
     }
@@ -214,7 +217,7 @@ public class HttpTaskServerTest {
                   "startTime": "2022-08-28T12:00"
                 }""");
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Task has null fields";
+        String expected = TASK.name() + " " + HAS_NULL_FIELDS;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Task updated");
     }
@@ -224,7 +227,7 @@ public class HttpTaskServerTest {
         URI url = URI.create("http://localhost:8080/tasks/task/?id=1");
         HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().build();
         String responseBody = getBodyResponse(request);
-        String expected = "Task deleted";
+        String expected = TASK.name() + " " + DELETED;
         assertEquals(expected, responseBody, "Task not deleted");
     }
 
@@ -233,7 +236,7 @@ public class HttpTaskServerTest {
         URI url = URI.create("http://localhost:8080/tasks/task/?id=3");
         HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().build();
         String responseBody = getBodyResponse(request);
-        String expected = "Task not deleted";
+        String expected = TASK.name() + " " + NOT_DELETED;
         assertEquals(expected, responseBody, "Task deleted");
     }
 
@@ -246,7 +249,7 @@ public class HttpTaskServerTest {
         JsonElement jsonElement = JsonParser.parseString(body);
         assertTrue(jsonElement.isJsonObject(), "Wrong answer from server");
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonArray jsonArray = jsonObject.getAsJsonArray("Epics");
+        JsonArray jsonArray = jsonObject.getAsJsonArray(String.valueOf(EPICS));
         assertNotNull(jsonArray, "Epics don't return");
         assertEquals(expectedSize, jsonArray.size(), "Wrong epics size");
     }
@@ -278,7 +281,7 @@ public class HttpTaskServerTest {
     void shouldNotReturnEpicWithId1() {
         URI url = URI.create("http://localhost:8080/tasks/epic/?id=1");
         HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
-        String expected = "No epic with this id";
+        String expected = EPIC.name() + " " + NOT_FOUND;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Epic found");
     }
@@ -290,7 +293,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(newEpic);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Epic created";
+        String expected = EPIC.name() + " " + CREATED;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Epic not created");
     }
@@ -303,7 +306,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(newEpic);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Epic already exists";
+        String expected = EPIC.name() + " " + ALREADY_EXISTS;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Epic created");
     }
@@ -321,7 +324,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(newSubTask);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Subtask already exists";
+        String expected = SUBTASK.name() + " " + ALREADY_EXISTS;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Subtask created");
     }
@@ -341,7 +344,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(newEpic);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Epic updated";
+        String expected = EPIC.name() + " " + UPDATED;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Epic not updated");
     }
@@ -360,7 +363,7 @@ public class HttpTaskServerTest {
                       "startTime": "2022-08-30T09:00"
                     }""");
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Epic has null fields";
+        String expected = EPIC.name() + " " + HAS_NULL_FIELDS;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Epic updated");
     }
@@ -370,7 +373,7 @@ public class HttpTaskServerTest {
         URI url = URI.create("http://localhost:8080/tasks/epic/?id=3");
         HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().build();
         String responseBody = getBodyResponse(request);
-        String expected = "Epic deleted";
+        String expected = EPIC.name() + " " + DELETED;
         assertEquals(expected, responseBody, "Epic not deleted");
     }
 
@@ -379,7 +382,7 @@ public class HttpTaskServerTest {
         URI url = URI.create("http://localhost:8080/tasks/epic/?id=1");
         HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().build();
         String responseBody = getBodyResponse(request);
-        String expected = "Epic not deleted";
+        String expected = EPIC.name() + " " + NOT_DELETED;
         assertEquals(expected, responseBody, "Epic deleted");
     }
 
@@ -392,7 +395,7 @@ public class HttpTaskServerTest {
         JsonElement jsonElement = JsonParser.parseString(body);
         assertTrue(jsonElement.isJsonObject(), "Wrong answer from server");
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonArray jsonArray = jsonObject.getAsJsonArray("Subtasks");
+        JsonArray jsonArray = jsonObject.getAsJsonArray(SUBTASKS.name());
         assertNotNull(jsonArray, "Subtasks don't return");
         assertEquals(expectedSize, jsonArray.size(), "Wrong subtasks size");
     }
@@ -402,7 +405,7 @@ public class HttpTaskServerTest {
         URI url = URI.create("http://localhost:8080/tasks/subtask/epic?id=10");
         HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
         String responseBody = getBodyResponse(request);
-        String expected = "Epic not found";
+        String expected = EPIC.name() + " " + NOT_FOUND;
         assertEquals(expected, responseBody, "SubTasks of epic returned");
     }
 
@@ -425,7 +428,7 @@ public class HttpTaskServerTest {
         JsonElement jsonElement = JsonParser.parseString(body);
         assertTrue(jsonElement.isJsonObject(), "Wrong answer from server");
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonArray jsonArray = jsonObject.getAsJsonArray("SubTasks");
+        JsonArray jsonArray = jsonObject.getAsJsonArray(String.valueOf(SUBTASKS));
         assertNotNull(jsonArray, "SubTasks don't return");
         assertEquals(expectedSize, jsonArray.size(), "Wrong subtasks size");
     }
@@ -457,7 +460,7 @@ public class HttpTaskServerTest {
     void shouldNotReturnSubtaskWithId1() {
         URI url = URI.create("http://localhost:8080/tasks/subtask/?id=1");
         HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
-        String expected = "No subtask with this id";
+        String expected = SUBTASK.name() + " " + NOT_FOUND;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Subtask found");
     }
@@ -472,7 +475,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(newSubTask);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Subtask created";
+        String expected = SUBTASK.name() + " " + CREATED;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Subtask not created");
     }
@@ -488,7 +491,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(newSubtask);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Subtask updated";
+        String expected = SUBTASK.name() + " " + UPDATED;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Subtask not updated");
     }
@@ -506,7 +509,7 @@ public class HttpTaskServerTest {
                       "startTime": "2022-08-30T09:00"
                     }""");
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Subtask has null fields";
+        String expected = SUBTASK.name() + " " + HAS_NULL_FIELDS;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Subtask updated");
     }
@@ -529,7 +532,7 @@ public class HttpTaskServerTest {
         URI url = URI.create("http://localhost:8080/tasks/subtask/?id=6");
         HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().build();
         String responseBody = getBodyResponse(request);
-        String expected = "Subtask deleted";
+        String expected = SUBTASK.name() + " " + DELETED;
         assertEquals(expected, responseBody, "Subtask not deleted");
     }
 
@@ -538,7 +541,7 @@ public class HttpTaskServerTest {
         URI url = URI.create("http://localhost:8080/tasks/subtask/?id=1");
         HttpRequest request = HttpRequest.newBuilder().uri(url).DELETE().build();
         String responseBody = getBodyResponse(request);
-        String expected = "Subtask not deleted";
+        String expected = SUBTASK.name() + " " + NOT_DELETED;
         assertEquals(expected, responseBody, "Subtask deleted");
     }
 
@@ -558,7 +561,7 @@ public class HttpTaskServerTest {
         JsonElement jsonElement = JsonParser.parseString(body);
         assertTrue(jsonElement.isJsonObject(), "Wrong answer from server");
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonArray jsonArray = jsonObject.getAsJsonArray("History");
+        JsonArray jsonArray = jsonObject.getAsJsonArray(String.valueOf(HISTORY_TASKS));
         assertNotNull(jsonArray, "History don't return");
         assertEquals(expectedSize, jsonArray.size(), "Wrong history size");
     }
@@ -582,7 +585,7 @@ public class HttpTaskServerTest {
         JsonElement jsonElement = JsonParser.parseString(body);
         assertTrue(jsonElement.isJsonObject(), "Wrong answer from server");
         JsonObject jsonObject = jsonElement.getAsJsonObject();
-        JsonArray jsonArray = jsonObject.getAsJsonArray("PrioritizedTasks");
+        JsonArray jsonArray = jsonObject.getAsJsonArray(String.valueOf(PRIORITIZED_TASKS));
         assertNotNull(jsonArray, "PrioritizedTasks don't return");
         assertEquals(expectedSize, jsonArray.size(), "Wrong prioritizedTasks size");
     }
@@ -683,7 +686,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(newTask);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Task overlap by time";
+        String expected = TASK.name() + " " + OVERLAP_BY_TIME;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Task created");
     }
@@ -700,7 +703,7 @@ public class HttpTaskServerTest {
         String json = gson.toJson(subTask);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
-        String expected = "Subtask overlap by time";
+        String expected = SUBTASK.name() + " " + OVERLAP_BY_TIME;
         String responseBody = getBodyResponse(request);
         assertEquals(expected, responseBody, "Subtask created");
     }
