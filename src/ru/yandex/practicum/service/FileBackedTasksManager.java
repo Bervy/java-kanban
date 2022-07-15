@@ -76,8 +76,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public boolean addTask(Task newTask) {
-        if (super.addTask(newTask)) {
+    public boolean isAddTask(Task newTask) {
+        if (super.isAddTask(newTask)) {
             save();
             return true;
         }
@@ -85,8 +85,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public boolean updateTask(Task updatedTask) {
-        if (super.updateTask(updatedTask)) {
+    public boolean isUpdateTask(Task updatedTask) {
+        if (super.isUpdateTask(updatedTask)) {
             save();
             return true;
         }
@@ -94,8 +94,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public boolean removeTask(int id) {
-        if (super.removeTask(id)) {
+    public boolean isRemoveTask(int id) {
+        if (super.isRemoveTask(id)) {
             save();
             return true;
         }
@@ -120,8 +120,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public boolean addEpic(Epic newEpic) {
-        if (super.addEpic(newEpic)) {
+    public boolean isAddEpic(Epic newEpic) {
+        if (super.isAddEpic(newEpic)) {
             save();
             return true;
         }
@@ -129,8 +129,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public boolean updateEpic(Epic updatedEpic) {
-        if (super.updateEpic(updatedEpic)) {
+    public boolean isUpdateEpic(Epic updatedEpic) {
+        if (super.isUpdateEpic(updatedEpic)) {
             save();
             return true;
         }
@@ -138,8 +138,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public boolean removeEpic(int id) {
-        if (super.removeEpic(id)) {
+    public boolean isRemoveEpic(int id) {
+        if (super.isRemoveEpic(id)) {
             save();
             return true;
         }
@@ -153,8 +153,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public boolean addSubTask(SubTask newSubtask) {
-        if (super.addSubTask(newSubtask)) {
+    public boolean isAddSubTask(SubTask newSubtask) {
+        if (super.isAddSubTask(newSubtask)) {
             save();
             return true;
         }
@@ -162,8 +162,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public boolean updateSubTask(SubTask updatedSubTask) {
-        if (super.updateSubTask(updatedSubTask)) {
+    public boolean isUpdateSubTask(SubTask updatedSubTask) {
+        if (super.isUpdateSubTask(updatedSubTask)) {
             save();
             return true;
         }
@@ -171,8 +171,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public boolean removeSubTask(Integer id) {
-        if (super.removeSubTask(id)) {
+    public boolean isRemoveSubTask(Integer id) {
+        if (super.isRemoveSubTask(id)) {
             save();
             return true;
         }
